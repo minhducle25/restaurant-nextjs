@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server'
  
-const privatePaths = ['/manager']
+const privatePaths = ['/manage']
 const publicPaths = ['/login']
 // This function can be marked `async` if using `await` inside
 export function proxy(request: NextRequest) {
@@ -18,5 +18,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/manager/:path*', '/login']
+  matcher: ['/manage/:path*', '/login']
 }

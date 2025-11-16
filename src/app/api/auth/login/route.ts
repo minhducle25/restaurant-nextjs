@@ -9,23 +9,26 @@ export async function POST(request: Request) {
   const cookieStore = await cookies();
   try {
     const { payload } = await authApiRequests.sLogin(body);
+    // debug: log backend payload shape
+    //console.log('[api/auth/login] backend payload:', payload)
     const { accessToken, refreshToken } = payload.data;
     const decodedAccessToken = jwt.decode(accessToken) as { exp: number };
     const decodedRefreshToken = jwt.decode(refreshToken) as { exp: number };
     cookieStore.set("accessToken", accessToken, {
       httpOnly: true,
-      secure: true,
+      // only secure in production (localhost over http won't store secure cookies)
+      secure: process.env.NODE_ENV === 'production',
       sameSite: "lax",
       path: "/",
-      expires: decodedAccessToken.exp * 1000,
+      expires: new Date(decodedAccessToken.exp * 1000),
     });
 
     cookieStore.set("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: "lax",
       path: "/",
-      expires: decodedRefreshToken.exp * 1000,
+      expires: new Date(decodedRefreshToken.exp * 1000),
     });
     return Response.json(payload);
   } catch (error) {
