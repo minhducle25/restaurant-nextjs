@@ -27,7 +27,7 @@ export default function DropdownAvatar() {
   const logout = async () => {
     if (logoutMutation.isPending) return
     try {
-      const res = await logoutMutation.mutateAsync()
+      await logoutMutation.mutateAsync()
       //console.log('[ui/logout] mutateAsync result:', res)
       // navigate after successful logout
       try {
