@@ -67,7 +67,7 @@ export const checkAndRefreshToken = async (param: { onError?: () => void; onSucc
     exp: number;
     iat: number;
   };
-  const now = Math.round(new Date().getTime() / 1000);
+  const now = (new Date().getTime() / 1000) - 1;
   //if refresh token is expired then log out
   if (decodedRefreshToken.exp <= now) {
     removeTokensFromLocalStorage()
