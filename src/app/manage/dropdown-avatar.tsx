@@ -16,6 +16,7 @@ import { handleErrorApi } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useAccountMe } from '@/queries/useAccount'
+import { useAppContext } from '@/components/app-provider'
 
 
 
@@ -24,11 +25,13 @@ export default function DropdownAvatar() {
   const router = useRouter()
   const {data} = useAccountMe()
   const account = data?.payload.data
+  const { setIsAuth } = useAppContext()
 
   const logout = async () => {
     if (logoutMutation.isPending) return
     try {
       await logoutMutation.mutateAsync()
+      setIsAuth(false)
       //console.log('[ui/logout] mutateAsync result:', res)
       // navigate after successful logout
       try {
