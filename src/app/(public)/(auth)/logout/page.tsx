@@ -8,10 +8,10 @@ import {
 import { useLogoutMutation } from "@/queries/useAuth";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 
-export default function LogoutPage() {
-  const { mutateAsync } = useLogoutMutation();
+function LogOut(){
+    const { mutateAsync } = useLogoutMutation();
   const router = useRouter();
   const {setIsAuth}  = useAppContext()
   const searchParams = useSearchParams();
@@ -38,6 +38,13 @@ export default function LogoutPage() {
   }else{
     router.push('/')
   }
-  }, [mutateAsync, router, refreshTokenfromUrl, accessTokenFromUrl]);
+  }, [mutateAsync, router, refreshTokenfromUrl, accessTokenFromUrl, setIsAuth]);
   return <div>Logging out...</div>;
+}
+export default function LogoutPage() {
+  return (
+    <Suspense>
+      <LogOut />
+  </Suspense>
+  )
 }
