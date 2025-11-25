@@ -40,7 +40,7 @@ export const useAddAccountMutation = () => {
     },
   });
 };
-export const useUpdateAccountMutation = ({ id }: { id: number }) => {
+export const useUpdateAccountMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({

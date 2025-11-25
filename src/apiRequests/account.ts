@@ -1,4 +1,3 @@
-import AddEmployee from "@/app/manage/accounts/add-employee";
 import http from "@/lib/http";
 import {
   AccountListResType,
