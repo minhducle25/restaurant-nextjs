@@ -1,5 +1,4 @@
 import {z} from "zod";
-import { de } from "zod/locales";
 
 
 const configSchema = z.object({
