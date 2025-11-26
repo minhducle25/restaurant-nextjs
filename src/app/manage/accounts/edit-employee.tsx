@@ -93,19 +93,23 @@ export default function EditEmployee({
         }
         const result = await updateEmployeeMutation.mutateAsync(body);
         toast.success(result.payload.message);
-        setId(undefined)
+        reset()
         onSubmitSuccess && onSubmitSuccess();
       } catch (error) {
         handleErrorApi({ error, setError: form.setError });
       }
     };
 
+    const reset = () => {
+      setId(undefined)
+      setFile(null)
+    }
   return (
     <Dialog
       open={Boolean(id)}
       onOpenChange={(value) => {
         if (!value) {
-          setId(undefined)
+          reset()
         }
       }}
     >
