@@ -15,6 +15,8 @@ import Link from 'next/link'
 import { useGetTable, useUpdateTableMutation } from '@/queries/useTable'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
+import { QrCode } from 'lucide-react'
+import ExportQRCodeTable from '@/components/qrcode-table'
 
 export default function EditTable({
   id,
@@ -45,17 +47,18 @@ export default function EditTable({
       form.reset({
         capacity,
         status,
+        changeToken: form.getValues('changeToken')
       })
     }
   }, [data, form])
 
-      const onSubmit = async (values: UpdateTableBodyType) => {
+    const onSubmit = async (values: UpdateTableBodyType) => {
       if (updateTableMutation.isPending) return;
       try {
-        //let body: UpdateTableBodyType & {id: number} = {id: id as number, ...values};
+        const body: UpdateTableBodyType & {id: number} = {id: id as number, ...values};
 
-        //const result = await updateTableMutation.mutateAsync(body);
-        //toast.success(result.payload.message);
+        const result = await updateTableMutation.mutateAsync(body);
+        toast.success(result.payload.message);
         reset()
         onSubmitSuccess && onSubmitSuccess();
       } catch (error) {
@@ -72,7 +75,7 @@ export default function EditTable({
       open={Boolean(id)}
       onOpenChange={(value) => {
         if (!value) {
-          setId(undefined)
+          reset()
         }
       }}
     >
@@ -87,13 +90,13 @@ export default function EditTable({
           <DialogTitle>Cập nhật bàn ăn</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form noValidate className='grid auto-rows-max items-start gap-4 md:gap-8' id='edit-table-form'>
+          <form noValidate className='grid auto-rows-max items-start gap-4 md:gap-8' id='edit-table-form' onSubmit={form.handleSubmit(onSubmit, e => {console.log(e)})}>
             <div className='grid gap-4 py-4'>
               <FormItem>
                 <div className='grid grid-cols-4 items-center justify-items-start gap-4'>
                   <Label htmlFor='name'>Số hiệu bàn</Label>
                   <div className='col-span-3 w-full space-y-2'>
-                    <Input id='number' type='number' className='w-full' value={tableNumber} readOnly />
+                    <Input id='number' type='number' className='w-full' value={data?.payload.data.number ?? 0} readOnly />
                     <FormMessage />
                   </div>
                 </div>
@@ -163,26 +166,28 @@ export default function EditTable({
               <FormItem>
                 <div className='grid grid-cols-4 items-center justify-items-start gap-4'>
                   <Label>QR Code</Label>
-                  <div className='col-span-3 w-full space-y-2'></div>
+                  <div className='col-span-3 w-full space-y-2'>
+                    {data && <ExportQRCodeTable token={data.payload.data.token} tableNumber={data.payload.data.number}/>}
+                  </div>
                 </div>
               </FormItem>
               <FormItem>
                 <div className='grid grid-cols-4 items-center justify-items-start gap-4'>
                   <Label>URL gọi món</Label>
                   <div className='col-span-3 w-full space-y-2'>
-                    <Link
+                    {data && <Link
                       href={getTableLink({
-                        token: '123123123',
-                        tableNumber: tableNumber
+                        token: data.payload.data.token,
+                        tableNumber: data.payload.data.number
                       })}
                       target='_blank'
                       className='break-all'
                     >
                       {getTableLink({
-                        token: '123123123',
-                        tableNumber: tableNumber
+                        token: data.payload.data.token,
+                        tableNumber: data.payload.data.number
                       })}
-                    </Link>
+                    </Link>}  
                   </div>
                 </div>
               </FormItem>
