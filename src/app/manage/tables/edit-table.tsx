@@ -15,7 +15,6 @@ import Link from 'next/link'
 import { useGetTable, useUpdateTableMutation } from '@/queries/useTable'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
-import { QrCode } from 'lucide-react'
 import ExportQRCodeTable from '@/components/qrcode-table'
 
 export default function EditTable({
@@ -35,7 +34,7 @@ export default function EditTable({
       changeToken: false
     }
   })
-  const tableNumber = 0
+  // const tableNumber = 0
   const updateTableMutation = useUpdateTableMutation()
   const {data} = useGetTable({
     id: id as number,
