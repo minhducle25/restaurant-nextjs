@@ -34,12 +34,8 @@ export default function DropdownAvatar() {
       setRole(undefined)
       //console.log('[ui/logout] mutateAsync result:', res)
       // navigate after successful logout
-      try {
         toast.success('Đăng xuất thành công')
         router.push('/')
-      } catch (navErr) {
-        console.error('[ui/logout] router.push error:', navErr)
-      }
     }catch(error:any){
       console.error('[ui/logout] mutation error:', error)
       handleErrorApi({error})
