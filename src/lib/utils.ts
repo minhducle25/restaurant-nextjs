@@ -5,9 +5,10 @@ import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 import jwt from "jsonwebtoken";
 import authApiRequests from "@/apiRequests/auth";
-import { DishStatus, OrderStatus, TableStatus } from "@/constants/type";
+import { DishStatus, OrderStatus, Role, TableStatus } from "@/constants/type";
 import evnConfig from "@/config";
 import { TokenPayload } from "@/types/jwt.types";
+import guestApiRequests from "@/apiRequests/guest";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -56,28 +57,33 @@ export const removeTokensFromLocalStorage = () => {
   if (!isBrowser) return;
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
-}
-export const checkAndRefreshToken = async (param: { onError?: () => void; onSuccess?: () => void }) => {
+};
+export const checkAndRefreshToken = async (param: {
+  onError?: () => void;
+  onSuccess?: () => void;
+}) => {
   const accessToken = getAccessTokenFromLocalStorage();
   const refreshToken = getRefreshTokenFromLocalStorage();
   // return early if either token is missing so decode() is called only with strings
   if (!accessToken || !refreshToken) return;
-  const decodedAccessToken = decodeToken(accessToken)
-  const decodedRefreshToken = decodeToken(refreshToken)
-  const now = (new Date().getTime() / 1000) - 1;
+  const decodedAccessToken = decodeToken(accessToken);
+  const decodedRefreshToken = decodeToken(refreshToken);
+  const now = new Date().getTime() / 1000 - 1;
   //if refresh token is expired then log out
   if (decodedRefreshToken.exp <= now) {
-    removeTokensFromLocalStorage()
+    removeTokensFromLocalStorage();
     return param?.onError?.();
-
-    
-  };
+  }
   if (
     decodedAccessToken.exp - now <
     (decodedAccessToken.exp - decodedAccessToken.iat) / 3
   ) {
     try {
-      const res = await authApiRequests.refreshToken();
+      const role = decodedRefreshToken.role;
+      const res =
+        role === Role.Guest
+          ? await guestApiRequests.refreshToken()
+          : await authApiRequests.refreshToken();
       setAccessTokenToLocalStorage(res.payload.data.accessToken);
       setRefreshTokenToLocalStorage(res.payload.data.refreshToken);
       param?.onSuccess?.();
@@ -88,52 +94,66 @@ export const checkAndRefreshToken = async (param: { onError?: () => void; onSucc
 };
 
 export const formatCurrency = (number: number) => {
-  return new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND'
-  }).format(number)
-}
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(number);
+};
 
-export const getVietnameseDishStatus = (status: (typeof DishStatus)[keyof typeof DishStatus]) => {
+export const getVietnameseDishStatus = (
+  status: (typeof DishStatus)[keyof typeof DishStatus]
+) => {
   switch (status) {
     case DishStatus.Available:
-      return 'Có sẵn'
+      return "Có sẵn";
     case DishStatus.Unavailable:
-      return 'Không có sẵn'
+      return "Không có sẵn";
     default:
-      return 'Ẩn'
+      return "Ẩn";
   }
-}
+};
 
-export const getVietnameseOrderStatus = (status: (typeof OrderStatus)[keyof typeof OrderStatus]) => {
+export const getVietnameseOrderStatus = (
+  status: (typeof OrderStatus)[keyof typeof OrderStatus]
+) => {
   switch (status) {
     case OrderStatus.Delivered:
-      return 'Đã phục vụ'
+      return "Đã phục vụ";
     case OrderStatus.Paid:
-      return 'Đã thanh toán'
+      return "Đã thanh toán";
     case OrderStatus.Pending:
-      return 'Chờ xử lý'
+      return "Chờ xử lý";
     case OrderStatus.Processing:
-      return 'Đang nấu'
+      return "Đang nấu";
     default:
-      return 'Từ chối'
+      return "Từ chối";
   }
-}
+};
 
-export const getVietnameseTableStatus = (status: (typeof TableStatus)[keyof typeof TableStatus]) => {
+export const getVietnameseTableStatus = (
+  status: (typeof TableStatus)[keyof typeof TableStatus]
+) => {
   switch (status) {
     case TableStatus.Available:
-      return 'Có sẵn'
+      return "Có sẵn";
     case TableStatus.Reserved:
-      return 'Đã đặt'
+      return "Đã đặt";
     default:
-      return 'Ẩn'
+      return "Ẩn";
   }
-}
+};
 
-export const getTableLink = ({ token, tableNumber }: { token: string; tableNumber: number }) => {
-  return evnConfig.NEXT_PUBLIC_URL + '/tables/' + tableNumber + '?token=' + token
-}
+export const getTableLink = ({
+  token,
+  tableNumber,
+}: {
+  token: string;
+  tableNumber: number;
+}) => {
+  return (
+    evnConfig.NEXT_PUBLIC_URL + "/tables/" + tableNumber + "?token=" + token
+  );
+};
 export const decodeToken = (token: string) => {
-  return jwt.decode(token) as TokenPayload
-}
+  return jwt.decode(token) as TokenPayload;
+};
