@@ -16,7 +16,7 @@ const menuItems: {
 }[] = [
   {
     title: "Trang Chủ",
-    href: "/menu",
+    href: "/",
   },
   {
     title: "Menu",

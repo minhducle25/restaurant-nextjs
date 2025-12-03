@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         port: '4000',
         pathname: '/**',
       },
+      {
+        hostname: 'placehold.com',
+        pathname: '/**',
+      }
     ],
     dangerouslyAllowSVG: true,
     unoptimized: process.env.NODE_ENV === 'development',
