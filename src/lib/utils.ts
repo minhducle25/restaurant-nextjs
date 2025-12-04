@@ -142,7 +142,6 @@ export const getVietnameseTableStatus = (
       return "Ẩn";
   }
 };
-
 export const getTableLink = ({
   token,
   tableNumber,
