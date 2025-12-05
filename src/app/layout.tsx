@@ -26,7 +26,7 @@ export default function RootLayout({
         <AppProvider>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
           {children}
-          <Toaster />
+          <Toaster position="top-right" />
         </ThemeProvider>
         </AppProvider>
       </body>

@@ -7,6 +7,7 @@ import { useGuestGetOrders } from "@/queries/useGuest";
 import { UpdateOrderResType } from "@/schemaValidations/order.schema";
 import Image from "next/image";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function OrdersCart() {
   const { data, refetch } = useGuestGetOrders();
@@ -20,24 +21,33 @@ export default function OrdersCart() {
     }
 
     function onConnect() {
-      console.log(socket.id)
+      console.log(socket.id);
     }
 
     function onDisconnect() {
-      console.log('disconnected')
+      console.log("disconnected");
     }
 
-    function onOrderUpdate(data: UpdateOrderResType['data']) {
+    function onOrderUpdate(data: UpdateOrderResType["data"]) {
+      const {
+        dishSnapshot: { name },
+        quantity,
+      } = data;
+      toast.message("Đơn hàng vừa được cập nhật", {
+        description: `Món ${name} vừa được cập nhật sang "${getVietnameseOrderStatus(
+          data.status
+        )}"`,
+      });
       refetch();
     }
-    socket.on('update-order', onOrderUpdate);
+    socket.on("update-order", onOrderUpdate);
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off('update-order', onOrderUpdate);
+      socket.off("update-order", onOrderUpdate);
     };
   }, [refetch]);
 
@@ -63,9 +73,11 @@ export default function OrdersCart() {
               <Badge className="px-1">{order.quantity}</Badge>
             </div>
           </div>
-                    <div className="flex-shrink-0 ml-auto flex justify-center items-center">
-                      <Badge variant={'outline'}>{getVietnameseOrderStatus(order.status)}</Badge>
-</div>
+          <div className="flex-shrink-0 ml-auto flex justify-center items-center">
+            <Badge variant={"outline"}>
+              {getVietnameseOrderStatus(order.status)}
+            </Badge>
+          </div>
         </div>
       ))}
       <div className="sticky bottom-0 flex">
