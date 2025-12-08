@@ -29,7 +29,7 @@ import EditOrder from "@/app/manage/orders/edit-order";
 import { createContext, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import AutoPagination from "@/components/auto-pagination";
-import { getVietnameseOrderStatus, handleErrorApi } from "@/lib/utils";
+import { formatCurrency, getVietnameseOrderStatus, handleErrorApi } from "@/lib/utils";
 import { OrderStatusValues } from "@/constants/type";
 import OrderStatics from "@/app/manage/orders/order-statics";
 import orderTableColumns from "@/app/manage/orders/order-table-columns";
@@ -199,16 +199,26 @@ export default function OrderTable() {
       refetch();
     }
 
+    function onPayment(data: PayGuestOrdersResType["data"]){
+      const {guest} = data[0];
+      toast.message("Đơn hàng đã được thanh toán", {
+        description: `Khách hàng #${guest?.name} tại bàn ${guest?.tableNumber} đã thanh toán thành công ${data.length} đơn hàng`,
+      });
+      refetch();
+    }
     socket.on("update-order", onOrderUpdate);
     socket.on("new-order", onNewOrder);
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+    socket.on("payment", onPayment)
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("update-order", onOrderUpdate);
       socket.off("new-order", onNewOrder);
+      socket.off("payment", onPayment)
+
     };
   }, [refetchOrderList, fromDate, toDate]);
 

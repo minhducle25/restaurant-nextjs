@@ -5,7 +5,10 @@ import { OrderStatus } from "@/constants/type";
 import socket from "@/lib/socket";
 import { formatCurrency, getVietnameseOrderStatus } from "@/lib/utils";
 import { useGuestGetOrders } from "@/queries/useGuest";
-import { UpdateOrderResType } from "@/schemaValidations/order.schema";
+import {
+  PayGuestOrdersResType,
+  UpdateOrderResType,
+} from "@/schemaValidations/order.schema";
 import Image from "next/image";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -79,14 +82,25 @@ export default function OrdersCart() {
       });
       refetch();
     }
+
+    function onPayment(data: PayGuestOrdersResType["data"]) {
+      const { guest } = data[0];
+      toast.message("Đơn hàng đã được thanh toán", {
+        description: `Khách hàng #${guest?.name} tại bàn ${guest?.tableNumber} đã thanh toán thành công ${data.length} đơn hàng`,
+      });
+      refetch();
+    }
     socket.on("update-order", onOrderUpdate);
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+    socket.on("payment", onPayment);
+    
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("update-order", onOrderUpdate);
+      socket.off("payment", onPayment);
     };
   }, [refetch]);
 
@@ -119,12 +133,14 @@ export default function OrdersCart() {
           </div>
         </div>
       ))}
-      {paid.quantity !== 0  && (<div className="sticky bottom-0 flex">
-        <div className="w-full flex space-x-4 text-xl font-semibold">
-          <span>Đơn đã thanh toán: - {paid.quantity} món</span>
-          <span>{formatCurrency(paid.price)}</span>
+      {paid.quantity !== 0 && (
+        <div className="sticky bottom-0 flex">
+          <div className="w-full flex space-x-4 text-xl font-semibold">
+            <span>Đơn đã thanh toán: - {paid.quantity} món</span>
+            <span>{formatCurrency(paid.price)}</span>
+          </div>
         </div>
-      </div>)}
+      )}
       <div className="sticky bottom-0 flex">
         <div className="w-full flex space-x-4 text-xl font-semibold">
           <span>Đơn chưa thanh toán: - {waitingToPay.quantity} món</span>
