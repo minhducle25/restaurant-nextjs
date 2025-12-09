@@ -1,5 +1,5 @@
 import orderApiRequest from "@/apiRequests/order";
-import { CreateOrdersBodyType, GetOrderDetailResType, GetOrdersQueryParamsType, PayGuestOrdersBodyType, UpdateOrderBodyType } from "@/schemaValidations/order.schema";
+import { GetOrdersQueryParamsType, PayGuestOrdersBodyType, UpdateOrderBodyType } from "@/schemaValidations/order.schema";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useUpdateOrderMutation = () => {
