@@ -63,6 +63,7 @@ export const removeTokensFromLocalStorage = () => {
 export const checkAndRefreshToken = async (param: {
   onError?: () => void;
   onSuccess?: () => void;
+  force?: boolean;
 }) => {
   const accessToken = getAccessTokenFromLocalStorage();
   const refreshToken = getRefreshTokenFromLocalStorage();
@@ -76,9 +77,8 @@ export const checkAndRefreshToken = async (param: {
     removeTokensFromLocalStorage();
     return param?.onError?.();
   }
-  if (
-    decodedAccessToken.exp - now <
-    (decodedAccessToken.exp - decodedAccessToken.iat) / 3
+  if (param?.force || (decodedAccessToken.exp - now <
+    (decodedAccessToken.exp - decodedAccessToken.iat) / 3)
   ) {
     try {
       const role = decodedRefreshToken.role;
