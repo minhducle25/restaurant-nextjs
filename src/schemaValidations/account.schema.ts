@@ -56,7 +56,7 @@ export const UpdateEmployeeAccountBody = z
     changePassword: z.boolean().optional(),
     password: z.string().min(6).max(100).optional(),
     confirmPassword: z.string().min(6).max(100).optional(),
-    role: z.enum([Role.Owner, Role.Employee]).optional().default(Role.Employee)
+    role: z.enum([Role.Owner, Role.Employee]).optional()
   })
   .strict()
   .superRefine(({ confirmPassword, password, changePassword }, ctx) => {
@@ -108,7 +108,7 @@ export const ChangePasswordBody = z
 export type ChangePasswordBodyType = z.TypeOf<typeof ChangePasswordBody>
 
 export const AccountIdParam = z.object({
-  id: z.coerce.number()
+  id: z.coerce.number<number>()
 })
 
 export type AccountIdParamType = z.TypeOf<typeof AccountIdParam>
