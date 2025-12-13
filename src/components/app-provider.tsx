@@ -1,10 +1,12 @@
 "use client";
 import RefreshToken from "@/components/refresh-token";
-import { decodeToken, getAccessTokenFromLocalStorage, removeTokensFromLocalStorage } from "@/lib/utils";
+import { decodeToken, generateSocketInstance, getAccessTokenFromLocalStorage, removeTokensFromLocalStorage } from "@/lib/utils";
 import { RoleType } from "@/types/jwt.types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useContext, createContext, useState, useCallback } from "react";
+import { useContext, createContext, useState, useCallback, useEffect } from "react";
+import { Socket } from "socket.io-client";
+import { useEffectEvent } from "react";
  
 //default
 //staleTime: 0
@@ -21,6 +23,9 @@ const AppContext = createContext({
   isAuth: false,
   role: undefined as RoleType | undefined,
   setRole: (role: RoleType | undefined) => {},
+  socket: undefined as Socket | undefined,
+  setSocket: (socket?: Socket | undefined) => {},
+  disconnectSocket: () => {}
 })
 
 export const useAppContext = () => {
@@ -32,13 +37,27 @@ export default function AppProvider({
   children: React.ReactNode;
 }) {
 
-  const [role, setRoleState] = useState<RoleType | undefined>(() => {
+  const [socket, setSocket] = useState<Socket | undefined>();
+  const [role, setRoleState] = useState<RoleType | undefined>() 
+  
+  const onSetRoleState = useEffectEvent(setRoleState);
+  const onSetSocket = useEffectEvent(setSocket);
+
+  useEffect(() => {
     const accessToken = getAccessTokenFromLocalStorage();
     if (accessToken) {
-      return decodeToken(accessToken).role;
+      const role =  decodeToken(accessToken).role;
+      onSetRoleState(role)
+      const socketInstance = generateSocketInstance(accessToken);
+      onSetSocket(socketInstance)      
     }
     return undefined;
-  });
+  }, [])
+
+  const disconnectSocket = useCallback(() => {
+          socket?.disconnect()
+      setSocket(undefined)
+  }, [socket, setSocket])
 
   const setRole = useCallback((role?: RoleType | undefined) => {
     setRoleState(role);
@@ -49,7 +68,7 @@ export default function AppProvider({
 
   const isAuth = Boolean(role);
   return (
-    <AppContext.Provider value={{role, setRole, isAuth}}>
+    <AppContext.Provider value={{role, setRole, isAuth, socket, setSocket, disconnectSocket}}>
     <QueryClientProvider client={queryClient}>
       {children}
       <RefreshToken />

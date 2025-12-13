@@ -25,7 +25,6 @@ export default function DashboardMain() {
     const servingTableCount = data?.payload.data.servingTableCount ?? 0;
     const revenueByDate = data?.payload.data.revenueByDate ?? [];
     const dishIndicators = data?.payload.data.dishIndicator ?? [];
-    console.log("dishIndicators", dishIndicators);
   const resetDateFilter = () => {
     setFromDate(initFromDate);
     setToDate(initToDate);

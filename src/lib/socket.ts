@@ -5,7 +5,8 @@ import { io } from "socket.io-client";
 const socket = io(evnConfig.NEXT_PUBLIC_API_ENDPOINT, {
     auth: {
         Authorization: `Bearer ${getAccessTokenFromLocalStorage()}`
-    }
+    },
+    autoConnect: false
 });
 
 export default socket;

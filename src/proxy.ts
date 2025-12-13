@@ -1,6 +1,7 @@
 import { Role } from "@/constants/type";
-import { decodeToken } from "@/lib/utils";
+import { TokenPayload } from "@/types/jwt.types";
 import { NextResponse, NextRequest } from "next/server";
+import  jwt  from "jsonwebtoken";
 
 
 const publicPaths = ["/login"];
@@ -8,6 +9,10 @@ const managePath = ["/manage"]
 const guestPath = ["/guest"]
 const ownerPath = ["/manage/accounts"]
 const privatePaths = [...managePath, ...guestPath];
+
+const decodeToken = (token: string) => {
+  return jwt.decode(token) as TokenPayload;
+};
 
 // This function can be marked `async` if using `await` inside
 export function proxy(request: NextRequest) {

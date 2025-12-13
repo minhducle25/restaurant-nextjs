@@ -53,7 +53,7 @@ const menuItems: {
 ];
 
 export default function NavItems({ className }: { className?: string }) {
-  const { role, setRole } = useAppContext();
+  const { role, setRole, disconnectSocket } = useAppContext();
   const logoutMutation = useLogoutMutation();
   const guestLogoutMutation = useGuestLogoutMutation();
   const router = useRouter();
@@ -66,6 +66,7 @@ export default function NavItems({ className }: { className?: string }) {
     try {
       await mutation.mutateAsync();
       setRole(undefined);
+      disconnectSocket();
       toast.success("Đăng xuất thành công");
       router.push("/");
     } catch (error: any) {

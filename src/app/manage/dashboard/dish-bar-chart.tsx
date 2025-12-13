@@ -68,7 +68,6 @@ export function DishBarChart({
     "name" | "successOrders"
   >[];
 }) {
-  console.log("chartData", chartData);
   const chartDataColors = chartData.map((data, index) => {
     return {
       ...data,
