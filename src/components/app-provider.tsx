@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useContext, createContext, useState, useCallback, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useEffectEvent } from "react";
+import ListenLogoutSocket from "@/components/listen-logout-socket";
  
 //default
 //staleTime: 0
@@ -72,6 +73,7 @@ export default function AppProvider({
     <QueryClientProvider client={queryClient}>
       {children}
       <RefreshToken />
+      <ListenLogoutSocket />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
     </AppContext.Provider>
