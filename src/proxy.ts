@@ -6,6 +6,7 @@ import { NextResponse, NextRequest } from "next/server";
 const publicPaths = ["/login"];
 const managePath = ["/manage"]
 const guestPath = ["/guest"]
+const ownerPath = ["/manage/accounts"]
 const privatePaths = [...managePath, ...guestPath];
 
 // This function can be marked `async` if using `await` inside
@@ -45,7 +46,11 @@ export function proxy(request: NextRequest) {
   //guest trying to access manage paths
   const isGuestAccessingManagePath = (role === Role.Guest && managePath.some((path) => pathname.startsWith(path)))
   const isNonGuestAccessingGuestPath = (role !== Role.Guest && guestPath.some((path) => pathname.startsWith(path)))
-  if(isGuestAccessingManagePath || isNonGuestAccessingGuestPath){
+
+  //other connections not owner trying to access owner only path
+  const isNotOwnerAccessingOwnerPath = (role !== Role.Owner && ownerPath.some((path) => pathname.startsWith(path)))
+
+  if(isGuestAccessingManagePath || isNonGuestAccessingGuestPath || isNotOwnerAccessingOwnerPath){
     return NextResponse.redirect(new URL("/", request.url));
   }
 }

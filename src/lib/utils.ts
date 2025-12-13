@@ -178,6 +178,10 @@ export const formatDateTimeToTimeString = (date: string | Date) => {
   return format(date instanceof Date ? date : new Date(date), 'HH:mm:ss')
 }
 
+export const getRoleFromClient = () => {
+  const accessToken = getAccessTokenFromLocalStorage();
+  return accessToken ? decodeToken(accessToken).role : undefined;
+}
 export const OrderStatusIcon = {
   [OrderStatus.Pending]: Loader,
   [OrderStatus.Processing]: CookingPot,
