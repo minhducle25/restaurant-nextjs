@@ -22,6 +22,7 @@ const authApiRequests = {
         const result = await this.reFreshTokenRequest
         this.reFreshTokenRequest = null
         return result
-    }
+    },
+    setTokenToCookie: (body: {accessToken:string, refreshToken:string}) => http.post<{accessToken:string, refreshToken:string}>('api/auth/token', body, {baseUrl:''})
 }
 export default authApiRequests;
