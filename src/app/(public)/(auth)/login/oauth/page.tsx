@@ -17,7 +17,9 @@ export default function OAuth() {
   const router = useRouter();
   useEffect(() => {
     if (!accessToken || !refreshToken) {
-      toast.error(message || "Đăng nhập thất bại, vui lòng thử lại");
+      setTimeout(() => {
+        toast.error(message || "Đăng nhập thất bại, vui lòng thử lại");
+      });
     } else {
       const { role } = decodeToken(accessToken);
       mutateAsync({ accessToken, refreshToken })
@@ -28,7 +30,9 @@ export default function OAuth() {
           router.push("/manage/dashboard");
         })
         .catch((e) => {
-          toast.error(e?.message || "Đăng nhập thất bại, vui lòng thử lại");
+          setTimeout(() => {
+            toast.error(message || "Đăng nhập thất bại, vui lòng thử lại");
+          });
         });
     }
   }, [accessToken, refreshToken, setRole, router, setSocket, message]);
