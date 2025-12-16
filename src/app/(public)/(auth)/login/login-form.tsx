@@ -12,7 +12,7 @@ import { toast } from 'sonner'
 import {  generateSocketInstance, handleErrorApi } from '@/lib/utils'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
-import { useAppContext } from '@/components/app-provider'
+import { useAppStore } from '@/components/app-provider'
 import { io } from 'socket.io-client'
 import evnConfig from '@/config'
 import Link from 'next/link'
@@ -42,7 +42,9 @@ export default function LoginForm() {
   const loginMutation = useLoginMutation()
   const searchParams = useSearchParams()
   const clearTokens = searchParams.get('clearTokens')
-  const { setRole, setSocket} = useAppContext()
+    const setRole = useAppStore((state) => state.setRole);
+    const setSocket = useAppStore((state) => state.setSocket);
+
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
     defaultValues: {

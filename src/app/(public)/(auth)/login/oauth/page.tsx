@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppContext } from "@/components/app-provider";
+import {  useAppStore } from "@/components/app-provider";
 import { decodeToken, generateSocketInstance } from "@/lib/utils";
 import { useSetTokenToCookieMutation } from "@/queries/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,7 +9,9 @@ import { toast } from "sonner";
 
 export default function OAuth() {
   const { mutateAsync } = useSetTokenToCookieMutation();
-  const { setRole, setSocket } = useAppContext();
+  const setRole = useAppStore((state) => state.setRole);
+  const setSocket = useAppStore((state) => state.setSocket);
+  
   const searchParms = useSearchParams();
   const accessToken = searchParms.get("accessToken");
   const refreshToken = searchParms.get("refreshToken");
@@ -35,7 +37,7 @@ export default function OAuth() {
           });
         });
     }
-  }, [accessToken, refreshToken, setRole, router, setSocket, message]);
+  }, [accessToken, refreshToken, setRole, router, setSocket, message, mutateAsync]);
 
   return null;
 }
