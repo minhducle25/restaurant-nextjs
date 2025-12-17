@@ -1,7 +1,7 @@
 import dishApiRequest from "@/apiRequests/dish";
+import Modal from "@/app/(public)/@modal/(.)dishes/[id]/modal";
 import DishDetail from "@/app/(public)/dishes/[id]/dish-detail";
-import { formatCurrency, wrapServerApi } from "@/lib/utils";
-import Image from "next/image";
+import { wrapServerApi } from "@/lib/utils";
 
 export default async function DishPage({
   params,
@@ -13,7 +13,9 @@ export default async function DishPage({
   const data = await wrapServerApi(() => dishApiRequest.get(Number(id)));
 
   const dish = data?.payload?.data;
-    return (
+    return(
+        <Modal>
         <DishDetail dish={dish} />
+        </Modal>
     )
 }
