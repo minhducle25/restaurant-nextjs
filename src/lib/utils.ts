@@ -9,7 +9,7 @@ import { DishStatus, OrderStatus, Role, TableStatus } from "@/constants/type";
 import evnConfig from "@/config";
 import { TokenPayload } from "@/types/jwt.types";
 import guestApiRequests from "@/apiRequests/guest";
-import {format} from "date-fns";
+import { format } from "date-fns";
 import { BookX, CookingPot, HandCoins, Loader, Truck } from "lucide-react";
 import { io } from "socket.io-client";
 
@@ -78,8 +78,10 @@ export const checkAndRefreshToken = async (param: {
     removeTokensFromLocalStorage();
     return param?.onError?.();
   }
-  if (param?.force || (decodedAccessToken.exp - now <
-    (decodedAccessToken.exp - decodedAccessToken.iat) / 3)
+  if (
+    param?.force ||
+    decodedAccessToken.exp - now <
+      (decodedAccessToken.exp - decodedAccessToken.iat) / 3
   ) {
     try {
       const role = decodedRefreshToken.role;
@@ -162,34 +164,52 @@ export const decodeToken = (token: string) => {
 
 export function removeAccents(str: string) {
   return str
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D");
 }
 export const simpleMatchText = (fullText: string, matchText: string) => {
-  return removeAccents(fullText.toLowerCase()).includes(removeAccents(matchText.trim().toLowerCase()))
-}
+  return removeAccents(fullText.toLowerCase()).includes(
+    removeAccents(matchText.trim().toLowerCase())
+  );
+};
 
 export const formatDateTimeToLocaleString = (date: string | Date) => {
-  return format(date instanceof Date ? date : new Date(date), 'HH:mm:ss dd/MM/yyyy')
-}
+  return format(
+    date instanceof Date ? date : new Date(date),
+    "HH:mm:ss dd/MM/yyyy"
+  );
+};
 
 export const formatDateTimeToTimeString = (date: string | Date) => {
-  return format(date instanceof Date ? date : new Date(date), 'HH:mm:ss')
-}
+  return format(date instanceof Date ? date : new Date(date), "HH:mm:ss");
+};
 
 export const generateSocketInstance = (accessToken: string) => {
   return io(evnConfig.NEXT_PUBLIC_API_ENDPOINT, {
     auth: {
-        Authorization: `Bearer ${accessToken}`
-    }})
-}
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
 
 export const OrderStatusIcon = {
   [OrderStatus.Pending]: Loader,
   [OrderStatus.Processing]: CookingPot,
   [OrderStatus.Rejected]: BookX,
   [OrderStatus.Delivered]: Truck,
-  [OrderStatus.Paid]: HandCoins
-}
+  [OrderStatus.Paid]: HandCoins,
+};
+
+export const wrapServerApi = async <T>(fn: () => Promise<T>) => {
+  let result = null;
+  try {
+    result = await fn();
+  } catch (error: any) {
+    if (error.digest?.includes("NEXT_REDIRECT")) {
+      throw error;
+    }
+  }
+  return result;
+};
