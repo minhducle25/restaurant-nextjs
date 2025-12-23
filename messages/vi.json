@@ -1,5 +1,13 @@
 {
   "HomePage": {
     "title": "Nhà Hàng Big Boy"
+  },
+  "Login": {
+    "title": "Đăng Nhập"
+  },
+  "SwitchLanguage": {
+    "label": "Đổi Ngôn ngữ",
+        "en": "English",
+    "vi": "Vietnamese"
   }
 }

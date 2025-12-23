@@ -5,6 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { ModeToggle } from '@/components/ui/dark-mode-toggle'
 import NavItems from '@/app/(public)/nav-items'
 import { NextIntlClientProvider } from 'next-intl';
+import { SwitchLanguage } from '@/components/switch-language'
 
 export default async function Layout({
   children,
@@ -42,7 +43,8 @@ export default async function Layout({
             </nav>
           </SheetContent>
         </Sheet>
-        <div className='ml-auto'>
+        <div className='ml-auto flex items-center gap-2'>
+          <SwitchLanguage />
           <ModeToggle />
         </div>
       </header>
