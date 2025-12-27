@@ -2,7 +2,8 @@ import { Role } from "@/constants/type";
 import { TokenPayload } from "@/types/jwt.types";
 import { NextResponse, NextRequest } from "next/server";
 import  jwt  from "jsonwebtoken";
-
+import createIntlMiddleware from 'next-intl/middleware';
+import {routing} from './i18n/routing';
 
 const publicPaths = ["/login"];
 const managePath = ["/manage"]
@@ -14,16 +15,21 @@ const decodeToken = (token: string) => {
   return jwt.decode(token) as TokenPayload;
 };
 
+// Create the intl middleware
+const intlMiddleware = createIntlMiddleware(routing);
+
 // This function can be marked `async` if using `await` inside
-export function proxy(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  
+  // Remove locale prefix to check paths correctly
+  const pathnameWithoutLocale = pathname.replace(/^\/(en|vi)/, '') || '/';
 
   const accessToken = request.cookies.get("accessToken")?.value;
-
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
   //1. redirect to login if accessing private path without refresh token
-  if (privatePaths.some((path) => pathname.startsWith(path)) && !refreshToken) {
+  if (privatePaths.some((path) => pathnameWithoutLocale.startsWith(path)) && !refreshToken) {
      const url = new URL("/login", request.url);
      url.searchParams.set('clearTokens', 'true')
      return NextResponse.redirect(url);
@@ -31,12 +37,12 @@ export function proxy(request: NextRequest) {
 
   if(refreshToken){
     //2.1 redirect to home if accessing login path with refresh token
-    if (publicPaths.some((path) => pathname.startsWith(path))) {
+    if (publicPaths.some((path) => pathnameWithoutLocale.startsWith(path))) {
       return NextResponse.redirect(new URL("/", request.url));
   }
   //2.2 redirect to refresh token if access token is expired when accessing private path
   if (
-    privatePaths.some((path) => pathname.startsWith(path)) &&
+    privatePaths.some((path) => pathnameWithoutLocale.startsWith(path)) &&
     !accessToken 
   ) {
     const url = new URL("/refresh-token", request.url);
@@ -49,20 +55,24 @@ export function proxy(request: NextRequest) {
   const role = decodeToken(refreshToken)?.role;
 
   //guest trying to access manage paths
-  const isGuestAccessingManagePath = (role === Role.Guest && managePath.some((path) => pathname.startsWith(path)))
-  const isNonGuestAccessingGuestPath = (role !== Role.Guest && guestPath.some((path) => pathname.startsWith(path)))
+  const isGuestAccessingManagePath = (role === Role.Guest && managePath.some((path) => pathnameWithoutLocale.startsWith(path)))
+  const isNonGuestAccessingGuestPath = (role !== Role.Guest && guestPath.some((path) => pathnameWithoutLocale.startsWith(path)))
 
   //other connections not owner trying to access owner only path
-  const isNotOwnerAccessingOwnerPath = (role !== Role.Owner && ownerPath.some((path) => pathname.startsWith(path)))
+  const isNotOwnerAccessingOwnerPath = (role !== Role.Owner && ownerPath.some((path) => pathnameWithoutLocale.startsWith(path)))
 
   if(isGuestAccessingManagePath || isNonGuestAccessingGuestPath || isNotOwnerAccessingOwnerPath){
     return NextResponse.redirect(new URL("/", request.url));
   }
 }
 
-  return NextResponse.next();
+  // Run intl middleware for locale handling
+  return intlMiddleware(request);
 }
-
+ 
 export const config = {
-  matcher: ["/manage/:path*", "/guest/:path*", "/login"],
+  // Match all pathnames except for
+  // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
+  // - … the ones containing a dot (e.g. `favicon.ico`)
+  matcher: '/((?!api|trpc|_next|_vercel|.*\\..*).*)'
 };
