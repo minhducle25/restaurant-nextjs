@@ -9,5 +9,11 @@
     "label": "Đổi Ngôn ngữ",
         "en": "English",
     "vi": "Vietnamese"
+  },
+  "ErrorMessage":{
+    "invalidEmail": "Email không hợp lệ",
+    "required": "Trường này là bắt buộc",
+    "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+    "passwordMax": "Mật khẩu không được quá 100 ký tự"
   }
 }

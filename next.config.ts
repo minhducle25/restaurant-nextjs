@@ -16,10 +16,10 @@ const nextConfig: NextConfig = {
       }
     ],
     dangerouslyAllowSVG: true,
-    unoptimized: process.env.NODE_ENV === 'development',
+    // Tắt image optimization khi dùng localhost backend
+    unoptimized: true,
     qualities: [100, 75],
   },
-  // experimental: ({ allowPrivateIPs: true } as any),
 };
 
 const withNextIntl = createNextIntlPlugin();

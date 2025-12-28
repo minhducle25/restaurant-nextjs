@@ -2,7 +2,9 @@
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
 } from "@/components/ui/dialog"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -17,6 +19,9 @@ export default function Modal(
             if(!open) router.back()
         }}>
   <DialogContent className="max-h-full overflow-auto">
+    <VisuallyHidden>
+      <DialogTitle>Dish Detail</DialogTitle>
+    </VisuallyHidden>
     {children}
   </DialogContent>
 </Dialog>

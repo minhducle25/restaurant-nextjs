@@ -9,5 +9,11 @@
     "label": "Change Language",
     "en": "English",
     "vi": "Vietnamese"
+  },
+  "ErrorMessage":{
+    "invalidEmail": "Invalid email",
+    "required": "This field is required",
+    "passwordMin": "Password must be at least 6 characters",
+    "passwordMax": "Password must not exceed 100 characters"
   }
 }
