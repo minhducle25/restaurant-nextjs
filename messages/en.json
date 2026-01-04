@@ -1,6 +1,9 @@
 {
   "HomePage": {
-    "title": "Big Boy Restaurant"
+    "title": "Big Boy Restaurant",
+    "description": "",
+    "slogan": "Delicious food, unforgettable experience",
+    "h2": "A culinary journey like no other"
   },
   "Login": {
     "title": "Login"
