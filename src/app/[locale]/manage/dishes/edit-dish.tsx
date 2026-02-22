@@ -25,6 +25,7 @@ import { useGetDish, useUpdateDishMutation } from '@/queries/useDish'
 import { useUploadMediaMutation } from '@/queries/useMedia'
 import { toast } from 'sonner'
 import revalidateApiRequest from '@/apiRequests/revalidate'
+import { useTranslations } from 'next-intl'
 
 export default function EditDish({
   id,
@@ -35,6 +36,8 @@ export default function EditDish({
   setId: (value: number | undefined) => void
   onSubmitSuccess?: () => void
 }) {
+  const t = useTranslations('ManageDishes')
+  const tDishStatus = useTranslations('DishStatusLabel')
   const [file, setFile] = useState<File | null>(null)
   const imageInputRef = useRef<HTMLInputElement | null>(null)
     const {data} = useGetDish({
@@ -93,7 +96,7 @@ export default function EditDish({
         }
         const result = await updateDishMutation.mutateAsync(body);
         await revalidateApiRequest('dishes')
-        toast.success(result.payload.message);
+        toast.success(t('editSuccess'));
         reset()
         onSubmitSuccess && onSubmitSuccess();
       } catch (error) {
@@ -117,8 +120,8 @@ export default function EditDish({
     >
       <DialogContent className='sm:max-w-[600px] max-h-screen overflow-auto'>
         <DialogHeader>
-          <DialogTitle>Cập nhật món ăn</DialogTitle>
-          <DialogDescription>Các trường sau đây là bắ buộc: Tên, ảnh</DialogDescription>
+          <DialogTitle>{t('updateTitle')}</DialogTitle>
+          <DialogDescription>{t('updateDesc')}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form noValidate className='grid auto-rows-max items-start gap-4 md:gap-8' id='edit-dish-form' onSubmit={form.handleSubmit(onSubmit, e => {console.log(e)})}>
@@ -165,7 +168,7 @@ export default function EditDish({
                 render={({ field }) => (
                   <FormItem>
                     <div className='grid grid-cols-4 items-center justify-items-start gap-4'>
-                      <Label htmlFor='name'>Tên món ăn</Label>
+                      <Label htmlFor='name'>{t('fieldName')}</Label>
                       <div className='col-span-3 w-full space-y-2'>
                         <Input id='name' className='w-full' {...field} />
                         <FormMessage />
@@ -180,7 +183,7 @@ export default function EditDish({
                 render={({ field }) => (
                   <FormItem>
                     <div className='grid grid-cols-4 items-center justify-items-start gap-4'>
-                      <Label htmlFor='price'>Giá</Label>
+                      <Label htmlFor='price'>{t('fieldPrice')}</Label>
                       <div className='col-span-3 w-full space-y-2'>
                         <Input id='price' className='w-full' {...field} type='number' />
                         <FormMessage />
@@ -195,7 +198,7 @@ export default function EditDish({
                 render={({ field }) => (
                   <FormItem>
                     <div className='grid grid-cols-4 items-center justify-items-start gap-4'>
-                      <Label htmlFor='description'>Mô tả sản phẩm</Label>
+                      <Label htmlFor='description'>{t('fieldDescription')}</Label>
                       <div className='col-span-3 w-full space-y-2'>
                         <Textarea id='description' className='w-full' {...field} />
                         <FormMessage />
@@ -210,18 +213,18 @@ export default function EditDish({
                 render={({ field }) => (
                   <FormItem>
                     <div className='grid grid-cols-4 items-center justify-items-start gap-4'>
-                      <Label htmlFor='description'>Trạng thái</Label>
+                      <Label htmlFor='description'>{t('fieldStatus')}</Label>
                       <div className='col-span-3 w-full space-y-2'>
                         <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder='Chọn trạng thái' />
+                              <SelectValue placeholder={t('selectStatus')} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             {DishStatusValues.map((status) => (
                               <SelectItem key={status} value={status}>
-                                {getVietnameseDishStatus(status)}
+                                {tDishStatus(status)}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -238,7 +241,7 @@ export default function EditDish({
         </Form>
         <DialogFooter>
           <Button type='submit' form='edit-dish-form'>
-            Lưu
+            {t('save')}
           </Button>
         </DialogFooter>
       </DialogContent>

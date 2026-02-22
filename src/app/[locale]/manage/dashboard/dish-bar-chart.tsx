@@ -17,6 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { DashboardIndicatorResType } from "@/schemaValidations/indicator.schema";
+import { useTranslations } from "next-intl";
 
 const colors = [
   "var(--color-chrome)",
@@ -24,40 +25,6 @@ const colors = [
   "var(--color-firefox)",
   "var(--color-edge)",
   "var(--color-other)",
-];
-
-const chartConfig = {
-  successOrders: {
-    label: "Đơn thanh toán",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "oklch(var(--chart-1))",
-  },
-  safari: {
-    label: "Safari",
-    color: "oklch(var(--chart-2))",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "oklch(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "oklch(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "oklch(var(--chart-5))",
-  },
-} satisfies ChartConfig;
-
-const chartData = [
-  { name: "chrome", successOrders: 275, fill: "oklch(var(--chart-1))" },
-  { name: "safari", successOrders: 200, fill: "oklch(var(--chart-2))" },
-  { name: "firefox", successOrders: 187, fill: "oklch(var(--chart-3))" },
-  { name: "edge", successOrders: 173, fill: "oklch(var(--chart-4))" },
-  { name: "other", successOrders: 90, fill: "oklch(var(--chart-5))" },
 ];
 
 export function DishBarChart({
@@ -68,6 +35,32 @@ export function DishBarChart({
     "name" | "successOrders"
   >[];
 }) {
+  const t = useTranslations('Dashboard')
+  const chartConfig = {
+    successOrders: {
+      label: t('successOrders'),
+    },
+    chrome: {
+      label: "Chrome",
+      color: "oklch(var(--chart-1))",
+    },
+    safari: {
+      label: "Safari",
+      color: "oklch(var(--chart-2))",
+    },
+    firefox: {
+      label: "Firefox",
+      color: "oklch(var(--chart-3))",
+    },
+    edge: {
+      label: "Edge",
+      color: "oklch(var(--chart-4))",
+    },
+    other: {
+      label: "Other",
+      color: "oklch(var(--chart-5))",
+    },
+  } satisfies ChartConfig;
   const chartDataColors = chartData.map((data, index) => {
     return {
       ...data,
@@ -77,8 +70,8 @@ export function DishBarChart({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Xếp hạng món ăn</CardTitle>
-        <CardDescription>Được gọi nhiều nhất</CardDescription>
+        <CardTitle>{t('topDishes')}</CardTitle>
+        <CardDescription>{t('mostOrdered')}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

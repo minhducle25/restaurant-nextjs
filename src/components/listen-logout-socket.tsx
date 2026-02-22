@@ -7,8 +7,15 @@ import { toast } from "sonner";
 
 const UNAUTHENTICATED_PATHS = ["/login", "/logout", "/refresh-token"];
 
+const logoutMessages: Record<string, string> = {
+  vi: "Đăng xuất thành công",
+  en: "Logged out successfully",
+};
+
 export default function ListenLogoutSocket() {
   const pathname = usePathname();
+  const locale = pathname.split("/")[1] ?? "vi";
+  const logoutMessage = logoutMessages[locale] ?? logoutMessages["vi"];
   const router = useRouter();
   const { isPending, mutateAsync } = useLogoutMutation();
   const socket = useAppStore((state) => state.socket);
@@ -28,7 +35,7 @@ export default function ListenLogoutSocket() {
         // Always clear local state and disconnect, regardless of API call result
         setRole(undefined);
         disconnectSocket();
-        toast.success("Đăng xuất thành công");
+        toast.success(logoutMessage);
         router.push("/");
       }
     }
@@ -44,6 +51,7 @@ export default function ListenLogoutSocket() {
     isPending,
     setRole,
     disconnectSocket,
+    logoutMessage,
   ]);
   return null;
 }

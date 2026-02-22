@@ -45,6 +45,7 @@ import AutoPagination from '@/components/auto-pagination'
 import { useDeleteAccountMutation, useGetAccountList } from '@/queries/useAccount'
 import { toast } from 'sonner'
 import { handleErrorApi } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 type AccountItem = AccountListResType['data'][0]
 
@@ -60,71 +61,7 @@ const AccountTableContext = createContext<{
   setEmployeeDelete: (value: AccountItem | null) => {}
 })
 
-export const columns: ColumnDef<AccountType>[] = [
-  {
-    accessorKey: 'id',
-    header: 'ID'
-  },
-  {
-    accessorKey: 'avatar',
-    header: 'Avatar',
-    cell: ({ row }) => (
-      <div>
-        <Avatar className='aspect-square w-[100px] h-[100px] rounded-md object-cover'>
-          <AvatarImage src={row.getValue('avatar')} />
-          <AvatarFallback className='rounded-none'>{row.original.name}</AvatarFallback>
-        </Avatar>
-      </div>
-    )
-  },
-  {
-    accessorKey: 'name',
-    header: 'Tên',
-    cell: ({ row }) => <div className='capitalize'>{row.getValue('name')}</div>
-  },
-  {
-    accessorKey: 'email',
-    header: ({ column }) => {
-      return (
-        <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Email
-          <CaretSortIcon className='ml-2 h-4 w-4' />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: function Actions({ row }) {
-      const { setEmployeeIdEdit, setEmployeeDelete } = useContext(AccountTableContext)
-      const openEditEmployee = () => {
-        setEmployeeIdEdit(row.original.id)
-      }
 
-      const openDeleteEmployee = () => {
-        setEmployeeDelete(row.original)
-      }
-      return (
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='h-8 w-8 p-0'>
-              <span className='sr-only'>Open menu</span>
-              <DotsHorizontalIcon className='h-4 w-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={openEditEmployee}>Sửa</DropdownMenuItem>
-            <DropdownMenuItem onClick={openDeleteEmployee}>Xóa</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    }
-  }
-]
 
 function AlertDialogDeleteAccount({
   employeeDelete,
@@ -133,13 +70,14 @@ function AlertDialogDeleteAccount({
   employeeDelete: AccountItem | null
   setEmployeeDelete: (value: AccountItem | null) => void
 }) {
+  const t = useTranslations('ManageAccounts')
   const {mutateAsync} = useDeleteAccountMutation()
   const deleteAccount = async () => {
     if(employeeDelete){
       try {
         await mutateAsync(employeeDelete.id)
         setEmployeeDelete(null)
-        toast.success('Xóa nhân viên thành công')
+        toast.success(t('deleteSuccess'))
       } catch (error) {
         handleErrorApi({
           error
@@ -158,15 +96,15 @@ function AlertDialogDeleteAccount({
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Xóa nhân viên?</AlertDialogTitle>
+          <AlertDialogTitle>{t('deleteTitle')}</AlertDialogTitle>
           <AlertDialogDescription>
-            Tài khoản <span className='bg-foreground text-primary-foreground rounded px-1'>{employeeDelete?.name}</span>{' '}
-            sẽ bị xóa vĩnh viễn
+            <span className='bg-foreground text-primary-foreground rounded px-1'>{employeeDelete?.name}</span>{' '}
+            {t('deleteDesc')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={deleteAccount}>Continue</AlertDialogAction>
+          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+          <AlertDialogAction onClick={deleteAccount}>{t('confirmDelete')}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -175,6 +113,7 @@ function AlertDialogDeleteAccount({
 // Số lượng item trên 1 trang
 const PAGE_SIZE = 10
 export default function AccountTable() {
+  const t = useTranslations('ManageAccounts')
   const searchParam = useSearchParams()
   const page = searchParam.get('page') ? Number(searchParam.get('page')) : 1
   const pageIndex = page - 1
@@ -182,6 +121,64 @@ export default function AccountTable() {
   const [employeeIdEdit, setEmployeeIdEdit] = useState<number | undefined>()
   const [employeeDelete, setEmployeeDelete] = useState<AccountItem | null>(null)
   const accountListQuery = useGetAccountList()
+  const columns: ColumnDef<AccountType>[] = [
+    {
+      accessorKey: 'id',
+      header: 'ID'
+    },
+    {
+      accessorKey: 'avatar',
+      header: 'Avatar',
+      cell: ({ row }) => (
+        <div>
+          <Avatar className='aspect-square w-[100px] h-[100px] rounded-md object-cover'>
+            <AvatarImage src={row.getValue('avatar')} />
+            <AvatarFallback className='rounded-none'>{row.original.name}</AvatarFallback>
+          </Avatar>
+        </div>
+      )
+    },
+    {
+      accessorKey: 'name',
+      header: t('columnName'),
+      cell: ({ row }) => <div className='capitalize'>{row.getValue('name')}</div>
+    },
+    {
+      accessorKey: 'email',
+      header: ({ column }) => (
+        <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Email
+          <CaretSortIcon className='ml-2 h-4 w-4' />
+        </Button>
+      ),
+      cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>
+    },
+    {
+      id: 'actions',
+      enableHiding: false,
+      cell: function Actions({ row }) {
+        const { setEmployeeIdEdit, setEmployeeDelete } = useContext(AccountTableContext)
+        const openEditEmployee = () => { setEmployeeIdEdit(row.original.id) }
+        const openDeleteEmployee = () => { setEmployeeDelete(row.original) }
+        return (
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='h-8 w-8 p-0'>
+                <span className='sr-only'>Open menu</span>
+                <DotsHorizontalIcon className='h-4 w-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              <DropdownMenuLabel>{t('actions')}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={openEditEmployee}>{t('edit')}</DropdownMenuItem>
+              <DropdownMenuItem onClick={openDeleteEmployee}>{t('delete')}</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      }
+    }
+  ]
   const data = accountListQuery.data?.payload.data ?? []
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -274,8 +271,8 @@ export default function AccountTable() {
         </div>
         <div className='flex items-center justify-end space-x-2 py-4'>
           <div className='text-xs text-muted-foreground py-4 flex-1 '>
-            Hiển thị <strong>{table.getPaginationRowModel().rows.length}</strong> trong <strong>{data.length}</strong>{' '}
-            kết quả
+            {t('showing')} <strong>{table.getPaginationRowModel().rows.length}</strong> {t('of')} <strong>{data.length}</strong>{' '}
+            {t('results')}
           </div>
           <div>
             <AutoPagination

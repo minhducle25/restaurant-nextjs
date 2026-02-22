@@ -1,6 +1,4 @@
 'use client'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useForm } from 'react-hook-form'
@@ -9,11 +7,10 @@ import { LoginBody, LoginBodyType } from '@/schemaValidations/auth.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useLoginMutation } from '@/queries/useAuth'
 import { toast } from 'sonner'
-import {  generateSocketInstance, handleErrorApi } from '@/lib/utils'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { generateSocketInstance, handleErrorApi } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { useAppStore } from '@/components/app-provider'
-import { io } from 'socket.io-client'
 import evnConfig from '@/config'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
@@ -66,7 +63,7 @@ export default function LoginForm() {
     if (loginMutation.isPending) return
     try {
       const result = await loginMutation.mutateAsync(data)
-      toast.success(result.payload.message)
+      toast.success(t('loginSuccess'))
       setRole(result.payload.data.account.role)
       router.push('/manage/dashboard')
       const socketInstance = generateSocketInstance(result.payload.data.accessToken)
@@ -76,61 +73,84 @@ export default function LoginForm() {
     }
   }
   return (
-    <Card className='mx-auto max-w-sm'>
+    <div className='w-full max-w-sm p-8 rounded-2xl backdrop-blur-xl border shadow-2xl bg-[#1a2035]/80 border-slate-700/50'>
       <SearchParamsLoader onParamsReceived={setSearchParams} />
-      <CardHeader>
-        <CardTitle className='text-2xl'>{t("title")}</CardTitle>
-        <CardDescription>Nhập email và mật khẩu của bạn để đăng nhập vào hệ thống</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form className='space-y-2 max-w-[600px] shrink-0 w-full' noValidate onSubmit={form.handleSubmit(onSubmit, err => {console.warn(err)})}>
-            <div className='grid gap-4'>
-              <FormField
-                control={form.control}
-                name='email'
-                render={({ field, formState : {errors} }) => (
-                  <FormItem>
-                    <div className='grid gap-2'>
-                      <Label htmlFor='email'>Email</Label>
-                      <Input id='email' type='email' placeholder='m@example.com' required {...field} />
-                      <FormMessage>
-                        {Boolean(errors.email?.message) && errorMessageT(errors.email?.message as any)}
-                        </FormMessage>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='password'
-                render={({ field, formState: {errors} }) => (
-                  <FormItem>
-                    <div className='grid gap-2'>
-                      <div className='flex items-center'>
-                        <Label htmlFor='password'>Password</Label>
-                      </div>
-                      <Input id='password' type='password' required {...field} />
-                      <FormMessage>
-                        {Boolean(errors.password?.message) && errorMessageT(errors.password?.message as any)}
-                      </FormMessage>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <Button type='submit' className='w-full'>
-                Đăng nhập
-              </Button>
-              <Link href={googleOauthUrl}>
-                            <Button variant='outline' className='w-full' type='button'>
-                Đăng nhập bằng Google
-              </Button>
-              </Link>
 
-            </div>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+      {/* Logo */}
+      <div className='flex items-center justify-center gap-2 mb-6'>
+        <div className='w-10 h-10 bg-linear-to-tr from-orange-600 to-orange-400 rounded-xl flex items-center justify-center text-white font-extrabold text-base shadow-[0_0_15px_rgba(249,115,22,0.5)]'>
+          BB
+        </div>
+        <span className='text-xl font-black tracking-tight text-white'>Big Boy</span>
+      </div>
+
+      <h2 className='text-2xl font-bold mb-1 text-center text-white'>{t('title')}</h2>
+      <p className='text-sm text-slate-400 text-center mb-6'>{t('description')}</p>
+
+      <Form {...form}>
+        <form className='flex flex-col gap-4' noValidate onSubmit={form.handleSubmit(onSubmit, err => { console.warn(err) })}>
+          <FormField
+            control={form.control}
+            name='email'
+            render={({ field, formState: { errors } }) => (
+              <FormItem>
+                <div className='flex flex-col gap-1.5'>
+                  <Label htmlFor='email' className='text-sm font-semibold text-slate-300'>{t('email')}</Label>
+                  <Input
+                    id='email'
+                    type='email'
+                    placeholder='m@example.com'
+                    required
+                    {...field}
+                    className='px-4 py-3 rounded-xl border bg-[#0a0f1c]/50 border-slate-700 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-orange-500 transition-all'
+                  />
+                  <FormMessage>
+                    {Boolean(errors.email?.message) && errorMessageT(errors.email?.message as any)}
+                  </FormMessage>
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='password'
+            render={({ field, formState: { errors } }) => (
+              <FormItem>
+                <div className='flex flex-col gap-1.5'>
+                  <Label htmlFor='password' className='text-sm font-semibold text-slate-300'>{t('password')}</Label>
+                  <Input
+                    id='password'
+                    type='password'
+                    required
+                    {...field}
+                    className='px-4 py-3 rounded-xl border bg-[#0a0f1c]/50 border-slate-700 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-orange-500 transition-all'
+                  />
+                  <FormMessage>
+                    {Boolean(errors.password?.message) && errorMessageT(errors.password?.message as any)}
+                  </FormMessage>
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <button
+            type='submit'
+            disabled={loginMutation.isPending}
+            className='w-full mt-1 py-3 rounded-xl bg-linear-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-base shadow-[0_4px_15px_rgba(249,115,22,0.4)] transition-all hover:-translate-y-0.5 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed'
+          >
+            {loginMutation.isPending ? '...' : t('submit')}
+          </button>
+
+          <Link href={googleOauthUrl}>
+            <button
+              type='button'
+              className='w-full py-3 rounded-xl border border-slate-600 bg-white/5 hover:bg-white/10 text-white font-semibold text-base transition-all'
+            >
+              {t('loginWithGoogle')}
+            </button>
+          </Link>
+        </form>
+      </Form>
+    </div>
   )
 }

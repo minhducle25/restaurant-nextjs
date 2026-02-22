@@ -6,10 +6,12 @@ import { cn } from '@/lib/utils'
 import { Package2, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 export default function NavLinks() {
   const pathname = usePathname()
-
+  const t = useTranslations('ManageNav')
+  const tMenu = useTranslations('MenuItems')
     const role = useAppStore((state) => state.role);
   return (
     <TooltipProvider>
@@ -20,10 +22,10 @@ export default function NavLinks() {
             className='group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base'
           >
             <Package2 className='h-4 w-4 transition-all group-hover:scale-110' />
-            <span className='sr-only'>Home Page</span>
+            <span className='sr-only'>{t('homePage')}</span>
           </Link>
 
-          {menuItems.map((Item, index) => {
+          {menuItems(tMenu).map((Item, index) => {
             const isActive = pathname === Item.href
             if(!Item.roles.includes(role as any)) return null;
             return (
@@ -62,10 +64,10 @@ export default function NavLinks() {
                 )}
               >
                 <Settings className='h-5 w-5' />
-                <span className='sr-only'>Cài đặt</span>
+                <span className='sr-only'>{t('settings')}</span>
               </Link>
             </TooltipTrigger>
-            <TooltipContent side='right'>Cài đặt</TooltipContent>
+            <TooltipContent side='right'>{t('settings')}</TooltipContent>
           </Tooltip>
         </nav>
       </aside>

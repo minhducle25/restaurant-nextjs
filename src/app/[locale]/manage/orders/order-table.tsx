@@ -26,10 +26,10 @@ import {
 } from "@/schemaValidations/order.schema";
 import AddOrder from "@/app/[locale]/manage/orders/add-order";
 import EditOrder from "@/app/[locale]/manage/orders/edit-order";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import AutoPagination from "@/components/auto-pagination";
-import { formatCurrency, getVietnameseOrderStatus, handleErrorApi } from "@/lib/utils";
+import { formatCurrency, handleErrorApi } from "@/lib/utils";
 import { OrderStatusValues } from "@/constants/type";
 import OrderStatics from "@/app/[locale]/manage/orders/order-statics";
 import orderTableColumns from "@/app/[locale]/manage/orders/order-table-columns";
@@ -56,6 +56,7 @@ import { useGetOrderListQuery, useUpdateOrderMutation } from "@/queries/useOrder
 import { useGetTableList } from "@/queries/useTable";
 import { toast } from "sonner";
 import { useAppStore } from "@/components/app-provider";
+import { useTranslations } from "next-intl";
 
 export const OrderTableContext = createContext({
   setOrderIdEdit: (value: number | undefined) => {},
@@ -84,6 +85,8 @@ const PAGE_SIZE = 10;
 const initFromDate = startOfDay(new Date());
 const initToDate = endOfDay(new Date());
 export default function OrderTable() {
+  const t = useTranslations('ManageOrders')
+  const tStatus = useTranslations('OrderStatusLabel')
   const searchParam = useSearchParams();
   const socket = useAppStore((state) => state.socket);
   const [openStatusFilter, setOpenStatusFilter] = useState(false);
@@ -126,9 +129,10 @@ export default function OrderTable() {
     handleErrorApi({error})
   }};
 
+  const columns = useMemo(() => orderTableColumns(t), [t])
   const table = useReactTable({
     data: orderList,
-    columns: orderTableColumns,
+    columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -184,26 +188,24 @@ export default function OrderTable() {
         dishSnapshot: { name },
         quantity,
       } = data;
-      toast.message("Đơn hàng vừa được cập nhật", {
-        description: `Món ${name} vừa được cập nhật sang "${getVietnameseOrderStatus(
-          data.status
-        )}"`,
+      toast.message(t('orderUpdated'), {
+        description: t('orderUpdatedDesc', { name, status: tStatus(data.status) }),
       });
       refetch();
     }
 
     function onNewOrder(data: GuestCreateOrdersResType["data"]) {
       const {guest} = data[0];
-      toast.message("Bạn có đơn hàng mới từ ShopeeFood", {
-        description: `Khách hàng ${guest?.name} tại bàn ${guest?.tableNumber} vừa gọi ${data.length} đơn`,
+      toast.message(t('newOrder'), {
+        description: t('newOrderDesc', { name: guest?.name ?? '', tableNumber: guest?.tableNumber ?? '', count: data.length }),
       });
       refetch();
     }
 
     function onPayment(data: PayGuestOrdersResType["data"]){
       const {guest} = data[0];
-      toast.message("Đơn hàng đã được thanh toán", {
-        description: `Khách hàng #${guest?.name} tại bàn ${guest?.tableNumber} đã thanh toán thành công ${data.length} đơn hàng`,
+      toast.message(t('orderPaid'), {
+        description: t('paidDesc', { name: guest?.name ?? '', tableNumber: guest?.tableNumber ?? '', count: data.length }),
       });
       refetch();
     }
@@ -241,26 +243,26 @@ export default function OrderTable() {
         <div className=" flex items-center">
           <div className="flex flex-wrap gap-2">
             <div className="flex items-center">
-              <span className="mr-2">Từ</span>
+              <span className="mr-2">{t('from')}</span>
               <Input
                 type="datetime-local"
-                placeholder="Từ ngày"
+                placeholder={t('fromDate')}
                 className="text-sm"
                 value={format(fromDate, "yyyy-MM-dd HH:mm").replace(" ", "T")}
                 onChange={(event) => setFromDate(new Date(event.target.value))}
               />
             </div>
             <div className="flex items-center">
-              <span className="mr-2">Đến</span>
+              <span className="mr-2">{t('to')}</span>
               <Input
                 type="datetime-local"
-                placeholder="Đến ngày"
+                placeholder={t('toDate')}
                 value={format(toDate, "yyyy-MM-dd HH:mm").replace(" ", "T")}
                 onChange={(event) => setToDate(new Date(event.target.value))}
               />
             </div>
             <Button className="" variant={"outline"} onClick={resetDateFilter}>
-              Reset
+              {t('reset')}
             </Button>
           </div>
           <div className="ml-auto">
@@ -269,7 +271,7 @@ export default function OrderTable() {
         </div>
         <div className="flex flex-wrap items-center gap-4 py-4">
           <Input
-            placeholder="Tên khách"
+            placeholder={t('filterGuestName')}
             value={
               (table.getColumn("guestName")?.getFilterValue() as string) ?? ""
             }
@@ -279,7 +281,7 @@ export default function OrderTable() {
             className="max-w-[100px]"
           />
           <Input
-            placeholder="Số bàn"
+            placeholder={t('filterTableNumber')}
             value={
               (table.getColumn("tableNumber")?.getFilterValue() as string) ?? ""
             }
@@ -297,12 +299,12 @@ export default function OrderTable() {
                 className="w-[150px] text-sm justify-between"
               >
                 {table.getColumn("status")?.getFilterValue()
-                  ? getVietnameseOrderStatus(
+                  ? tStatus(
                       table
                         .getColumn("status")
                         ?.getFilterValue() as (typeof OrderStatusValues)[number]
                     )
-                  : "Trạng thái"}
+                  : t('filterStatus')}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -335,7 +337,7 @@ export default function OrderTable() {
                               : "opacity-0"
                           )}
                         />
-                        {getVietnameseOrderStatus(status)}
+                        {tStatus(status)}
                       </CommandItem>
                     ))}
                   </CommandList>
@@ -391,10 +393,10 @@ export default function OrderTable() {
                 ) : (
                   <TableRow>
                     <TableCell
-                      colSpan={orderTableColumns.length}
+                      colSpan={orderTableColumns(t).length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      {t('noResultsTable')}
                     </TableCell>
                   </TableRow>
                 )}
@@ -404,9 +406,9 @@ export default function OrderTable() {
         )}
         <div className="flex items-center justify-end space-x-2 py-4">
           <div className="text-xs text-muted-foreground py-4 flex-1 ">
-            Hiển thị{" "}
-            <strong>{table.getPaginationRowModel().rows.length}</strong> trong{" "}
-            <strong>{orderList.length}</strong> kết quả
+            {t('showing')}{" "}
+            <strong>{table.getPaginationRowModel().rows.length}</strong> {t('of')}{" "}
+            <strong>{orderList.length}</strong> {t('results')}
           </div>
           <div>
             <AutoPagination

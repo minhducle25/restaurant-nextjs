@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { format, parse } from 'date-fns'
 import { DashboardIndicatorQueryParamsType, DashboardIndicatorResType } from '@/schemaValidations/indicator.schema'
+import { useTranslations } from 'next-intl'
 const chartConfig = {
   desktop: {
     label: 'Desktop',
@@ -14,13 +15,11 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function RevenueLineChart({revenueByDate}:{revenueByDate: DashboardIndicatorResType["data"]["revenueByDate"]}) {
-  // fake 10 item
-
+  const t = useTranslations('Dashboard')
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Doanh thu</CardTitle>
-        {/* <CardDescription>January - June 2024</CardDescription> */}
+        <CardTitle>{t('revenue')}</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -50,17 +49,11 @@ export function RevenueLineChart({revenueByDate}:{revenueByDate: DashboardIndica
               }}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator='dashed' />} />
-            <Line dataKey='revenue' name="Doanh thu" type='linear' stroke='var(--color-desktop)' strokeWidth={2} dot={false}  />
+            <Line dataKey='revenue' name={t('revenue')} type='linear' stroke='var(--color-desktop)' strokeWidth={2} dot={false}  />
           </LineChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className='flex-col items-start gap-2 text-sm'>
-        {/* <div className='flex gap-2 font-medium leading-none'>
-          Trending up by 5.2% this month <TrendingUp className='h-4 w-4' />
-        </div>
-        <div className='leading-none text-muted-foreground'>
-          Showing total visitors for the last 6 months
-        </div> */}
       </CardFooter>
     </Card>
   )

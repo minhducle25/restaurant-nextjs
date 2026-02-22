@@ -1,7 +1,6 @@
 import dishApiRequest from '@/apiRequests/dish';
 import evnConfig, { locales } from '@/config'
 import { generateSlugUrl } from '@/lib/utils';
-import { access } from 'fs'
 import type { MetadataRoute } from 'next'
  
 const staticRoutes: MetadataRoute.Sitemap = [{

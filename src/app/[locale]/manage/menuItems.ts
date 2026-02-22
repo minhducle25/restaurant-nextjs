@@ -1,33 +1,36 @@
 import { Role } from '@/constants/type'
 import { Home, LineChart, ShoppingCart, Users2, Salad, Table } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
-const menuItems = [
+type TFunction = ReturnType<typeof useTranslations>
+
+const menuItems = (t: TFunction) => [
   {
-    title: 'Dashboard',
+    title: t('dashboard'),
     Icon: Home,
     href: '/manage/dashboard',
     roles: [Role.Owner, Role.Employee]
   },
   {
-    title: 'Đơn hàng',
+    title: t('orders'),
     Icon: ShoppingCart,
     href: '/manage/orders',
     roles: [Role.Owner, Role.Employee]
   },
   {
-    title: 'Bàn ăn',
+    title: t('tables'),
     Icon: Table,
     href: '/manage/tables',
     roles: [Role.Owner, Role.Employee]
   },
   {
-    title: 'Món ăn',
+    title: t('dishes'),
     Icon: Salad,
     href: '/manage/dishes',
     roles: [Role.Owner, Role.Employee]
   },
   {
-    title: 'Nhân viên',
+    title: t('accounts'),
     Icon: Users2,
     href: '/manage/accounts',
     roles: [Role.Owner]

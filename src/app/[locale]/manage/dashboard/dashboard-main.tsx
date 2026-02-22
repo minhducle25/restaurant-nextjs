@@ -8,11 +8,13 @@ import { Button } from '@/components/ui/button'
 import { endOfDay, format, startOfDay } from 'date-fns'
 import { useState } from 'react'
 import { useDashboardIndicators } from '@/queries/useIndicators'
+import { useTranslations } from 'next-intl'
 
 const initFromDate = startOfDay(new Date());
 const initToDate = endOfDay(new Date());
 
 export default function DashboardMain() {
+    const t = useTranslations('Dashboard')
     const [fromDate, setFromDate] = useState(initFromDate);
     const [toDate, setToDate] = useState(initToDate);
     const {data} = useDashboardIndicators({
@@ -34,23 +36,23 @@ export default function DashboardMain() {
     <div className='space-y-4'>
       <div className='flex flex-wrap gap-2'>
         <div className='flex items-center'>
-          <span className='mr-2'>Từ</span>
-          <Input type='datetime-local' placeholder='Từ ngày' className='text-sm' value={format(fromDate, "yyyy-MM-dd HH:mm").replace(" ", "T")}
+          <span className='mr-2'>{t('from')}</span>
+          <Input type='datetime-local' placeholder={t('fromDate')} className='text-sm' value={format(fromDate, "yyyy-MM-dd HH:mm").replace(" ", "T")}
                           onChange={(event) => setFromDate(new Date(event.target.value))}/>
         </div>
         <div className='flex items-center'>
-          <span className='mr-2'>Đến</span>
-          <Input type='datetime-local' placeholder='Đến ngày' value={format(toDate, "yyyy-MM-dd HH:mm").replace(" ", "T")}
+          <span className='mr-2'>{t('to')}</span>
+          <Input type='datetime-local' placeholder={t('toDate')} value={format(toDate, "yyyy-MM-dd HH:mm").replace(" ", "T")}
                 onChange={(event) => setToDate(new Date(event.target.value))} />
         </div>
         <Button className='' variant={'outline'} onClick={resetDateFilter}>
-          Reset
+          {t('reset')}
         </Button>
       </div>
       <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Tổng doanh thu</CardTitle>
+            <CardTitle className='text-sm font-medium'>{t('totalRevenue')}</CardTitle>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -70,7 +72,7 @@ export default function DashboardMain() {
         </Card>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Khách</CardTitle>
+            <CardTitle className='text-sm font-medium'>{t('guests')}</CardTitle>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -88,12 +90,12 @@ export default function DashboardMain() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>{guestCount}</div>
-            <p className='text-xs text-muted-foreground'>Gọi món</p>
+            <p className='text-xs text-muted-foreground'>{t('orderedDishes')}</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Đơn hàng</CardTitle>
+            <CardTitle className='text-sm font-medium'>{t('orders')}</CardTitle>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -110,12 +112,12 @@ export default function DashboardMain() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>{orderCount}</div>
-            <p className='text-xs text-muted-foreground'>Đã thanh toán</p>
+            <p className='text-xs text-muted-foreground'>{t('paid')}</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Bàn đang phục vụ</CardTitle>
+            <CardTitle className='text-sm font-medium'>{t('servingTables')}</CardTitle>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'

@@ -6,34 +6,72 @@ import { Toaster } from '@/components/ui/sonner'
 import { ThemeProvider } from '@/components/theme-provider'
 import AppProvider from '@/components/app-provider'
 import { getTranslations } from 'next-intl/server'
-import {Locale, locales} from '@/config'
+import { Locale, locales } from '@/config'
+import evnConfig from '@/config'
 
 const fontSans = FontSans({
   subsets: ['latin'],
   variable: '--font-sans'
 })
-// export const metadata: Metadata = {
-//   title: 'Big Boy Restaurant',
-//   description: 'The best restaurant in the world'
-// }
 
 export async function generateMetadata({
   params
-}: {params: Promise<{ locale: Locale }>}){
-  const {locale} = await params;
-  const t = await getTranslations({locale, namespace: 'HomePage'});
+}: {
+  params: Promise<{ locale: Locale }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'HomePage' })
   return {
-    title: t('title'),
-    description: 'The best restaurant in the world'
+    metadataBase: new URL(evnConfig.NEXT_PUBLIC_URL),
+    title: {
+      default: t('title'),
+      template: `%s | ${t('title')}`
+    },
+    description: t('description'),
+    openGraph: {
+      type: 'website',
+      locale: locale === 'vi' ? 'vi_VN' : 'en_US',
+      siteName: t('title'),
+      title: t('title'),
+      description: t('description'),
+      images: [
+        {
+          url: '/banner.png',
+          width: 1200,
+          height: 630,
+          alt: t('title')
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('title'),
+      description: t('description'),
+      images: ['/banner.png']
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1
+      }
+    }
   }
 }
-export default function RootLayout({
-  children
+export default async function RootLayout({
+  children,
+  params
 }: Readonly<{
   children: React.ReactNode
+  params: Promise<{ locale?: string }>
 }>) {
+  const { locale } = await params
   return (
-    <html suppressHydrationWarning>
+    <html lang={locale ?? 'vi'} suppressHydrationWarning>
       <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)} suppressHydrationWarning >
         <AppProvider>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>

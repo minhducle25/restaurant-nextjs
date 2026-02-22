@@ -33,50 +33,9 @@ import { Input } from "@/components/ui/input";
 import { GetListGuestsResType } from "@/schemaValidations/account.schema";
 import { endOfDay, format, startOfDay } from "date-fns";
 import { useGetGuestListQuery } from "@/queries/useAccount";
+import { useTranslations } from "next-intl";
 
 type GuestItem = GetListGuestsResType["data"][0];
-
-export const columns: ColumnDef<GuestItem>[] = [
-  {
-    accessorKey: "name",
-    header: "Tên",
-    cell: ({ row }) => (
-      <div className="capitalize">
-        {row.getValue("name")} | (#{row.original.id})
-      </div>
-    ),
-    filterFn: (row, columnId, filterValue: string) => {
-      if (filterValue === undefined) return true;
-      return simpleMatchText(
-        row.original.name + String(row.original.id),
-        String(filterValue)
-      );
-    },
-  },
-  {
-    accessorKey: "tableNumber",
-    header: "Số bàn",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("tableNumber")}</div>
-    ),
-    filterFn: (row, columnId, filterValue: string) => {
-      if (filterValue === undefined) return true;
-      return simpleMatchText(
-        String(row.original.tableNumber),
-        String(filterValue)
-      );
-    },
-  },
-  {
-    accessorKey: "createdAt",
-    header: () => <div>Tạo</div>,
-    cell: ({ row }) => (
-      <div className="flex items-center space-x-4 text-sm">
-        {formatDateTimeToLocaleString(row.getValue("createdAt"))}
-      </div>
-    ),
-  },
-];
 
 const PAGE_SIZE = 10;
 const initFromDate = startOfDay(new Date());
@@ -87,6 +46,48 @@ export default function GuestsDialog({
 }: {
   onChoose: (guest: GuestItem) => void;
 }) {
+  const t = useTranslations("ManageOrders");
+  const columns: ColumnDef<GuestItem>[] = [
+    {
+      accessorKey: "name",
+      header: t("columnGuestName"),
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {row.getValue("name")} | (#{row.original.id})
+        </div>
+      ),
+      filterFn: (row, columnId, filterValue: string) => {
+        if (filterValue === undefined) return true;
+        return simpleMatchText(
+          row.original.name + String(row.original.id),
+          String(filterValue)
+        );
+      },
+    },
+    {
+      accessorKey: "tableNumber",
+      header: t("columnTableNumber"),
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("tableNumber")}</div>
+      ),
+      filterFn: (row, columnId, filterValue: string) => {
+        if (filterValue === undefined) return true;
+        return simpleMatchText(
+          String(row.original.tableNumber),
+          String(filterValue)
+        );
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: t("columnCreated"),
+      cell: ({ row }) => (
+        <div className="flex items-center space-x-4 text-sm">
+          {formatDateTimeToLocaleString(row.getValue("createdAt"))}
+        </div>
+      ),
+    },
+  ];
   const [open, setOpen] = useState(false);
   const [fromDate, setFromDate] = useState(initFromDate);
   const [toDate, setToDate] = useState(initToDate);
@@ -143,20 +144,20 @@ export default function GuestsDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Chọn khách</Button>
+        <Button variant="outline">{t("selectGuest")}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px] max-h-full overflow-auto">
         <DialogHeader>
-          <DialogTitle>Chọn khách hàng</DialogTitle>
+          <DialogTitle>{t("selectGuestTitle")}</DialogTitle>
         </DialogHeader>
         <div>
           <div className="w-full">
             <div className="flex flex-wrap gap-2">
               <div className="flex items-center">
-                <span className="mr-2">Từ</span>
+                <span className="mr-2">{t("from")}</span>
                 <Input
                   type="datetime-local"
-                  placeholder="Từ ngày"
+                  placeholder={t("fromDate")}
                   className="text-sm"
                   value={format(fromDate, "yyyy-MM-dd HH:mm").replace(" ", "T")}
                   onChange={(event) =>
@@ -165,10 +166,10 @@ export default function GuestsDialog({
                 />
               </div>
               <div className="flex items-center">
-                <span className="mr-2">Đến</span>
+                <span className="mr-2">{t("to")}</span>
                 <Input
                   type="datetime-local"
-                  placeholder="Đến ngày"
+                  placeholder={t("toDate")}
                   value={format(toDate, "yyyy-MM-dd HH:mm").replace(" ", "T")}
                   onChange={(event) => setToDate(new Date(event.target.value))}
                 />
@@ -178,12 +179,12 @@ export default function GuestsDialog({
                 variant={"outline"}
                 onClick={resetDateFilter}
               >
-                Reset
+                {t("reset")}
               </Button>
             </div>
             <div className="flex items-center py-4 gap-2">
               <Input
-                placeholder="Tên hoặc Id"
+                placeholder={t("filterNameOrId")}
                 value={
                   (table.getColumn("name")?.getFilterValue() as string) ?? ""
                 }
@@ -193,7 +194,7 @@ export default function GuestsDialog({
                 className="w-[170px]"
               />
               <Input
-                placeholder="Số bàn"
+                placeholder={t("filterTableNumber")}
                 value={
                   (table
                     .getColumn("tableNumber")
@@ -263,9 +264,9 @@ export default function GuestsDialog({
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
               <div className="text-xs text-muted-foreground py-4 flex-1 ">
-                Hiển thị{" "}
+                {t("showing")}{" "}
                 <strong>{table.getPaginationRowModel().rows.length}</strong>{" "}
-                trong <strong>{data.length}</strong> kết quả
+                {t("of")} <strong>{data.length}</strong> {t("results")}
               </div>
               <div>
                 <AutoPagination

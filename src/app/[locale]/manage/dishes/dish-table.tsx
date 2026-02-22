@@ -45,6 +45,7 @@ import EditDish from '@/app/[locale]/manage/dishes/edit-dish'
 import AddDish from '@/app/[locale]/manage/dishes/add-dish'
 import { useDeleteDishMutation, useGetDishList } from '@/queries/useDish'
 import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 
 type DishItem = DishListResType['data'][0]
 
@@ -60,76 +61,7 @@ const DishTableContext = createContext<{
   setDishDelete: (value: DishItem | null) => {}
 })
 
-export const columns: ColumnDef<DishItem>[] = [
-  {
-    accessorKey: 'id',
-    header: 'ID'
-  },
-  {
-    accessorKey: 'image',
-    header: 'Ảnh',
-    cell: ({ row }) => (
-      <div>
-        <Avatar className='aspect-square w-[100px] h-[100px] rounded-md object-cover'>
-          <AvatarImage src={row.getValue('image')} />
-          <AvatarFallback className='rounded-none'>{row.original.name}</AvatarFallback>
-        </Avatar>
-      </div>
-    )
-  },
-  {
-    accessorKey: 'name',
-    header: 'Tên',
-    cell: ({ row }) => <div className='capitalize'>{row.getValue('name')}</div>
-  },
-  {
-    accessorKey: 'price',
-    header: 'Giá cả',
-    cell: ({ row }) => <div className='capitalize'>{formatCurrency(row.getValue('price'))}</div>
-  },
-  {
-    accessorKey: 'description',
-    header: 'Mô tả',
-    cell: ({ row }) => (
-      <div dangerouslySetInnerHTML={{ __html: row.getValue('description') }} className='whitespace-pre-line' />
-    )
-  },
-  {
-    accessorKey: 'status',
-    header: 'Trạng thái',
-    cell: ({ row }) => <div>{getVietnameseDishStatus(row.getValue('status'))}</div>
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: function Actions({ row }) {
-      const { setDishIdEdit, setDishDelete } = useContext(DishTableContext)
-      const openEditDish = () => {
-        setDishIdEdit(row.original.id)
-      }
 
-      const openDeleteDish = () => {
-        setDishDelete(row.original)
-      }
-      return (
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='h-8 w-8 p-0'>
-              <span className='sr-only'>Open menu</span>
-              <DotsHorizontalIcon className='h-4 w-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={openEditDish}>Sửa</DropdownMenuItem>
-            <DropdownMenuItem onClick={openDeleteDish}>Xóa</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    }
-  }
-]
 
 function AlertDialogDeleteDish({
   dishDelete,
@@ -138,13 +70,14 @@ function AlertDialogDeleteDish({
   dishDelete: DishItem | null
   setDishDelete: (value: DishItem | null) => void
 }) {
-    const {mutateAsync} = useDeleteDishMutation()
+  const t = useTranslations('ManageDishes')
+  const {mutateAsync} = useDeleteDishMutation()
   const deleteDish = async () => {
     if(dishDelete){
       try {
         await mutateAsync(dishDelete.id)
         setDishDelete(null)
-        toast.success('Xóa món ăn thành công')
+        toast.success(t('deleteSuccess'))
       } catch (error) {
         handleErrorApi({
           error
@@ -164,23 +97,23 @@ function AlertDialogDeleteDish({
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Xóa món ăn?</AlertDialogTitle>
+          <AlertDialogTitle>{t('deleteTitle')}</AlertDialogTitle>
           <AlertDialogDescription>
-            Món <span className='bg-foreground text-primary-foreground rounded px-1'>{dishDelete?.name}</span> sẽ bị xóa
-            vĩnh viễn
+            {t('deleteDescPrefix')} <span className='bg-foreground text-primary-foreground rounded px-1'>{dishDelete?.name}</span> {t('deleteDescSuffix')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={deleteDish}>Continue</AlertDialogAction>
+          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+          <AlertDialogAction onClick={deleteDish}>{t('confirmDelete')}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   )
 }
-// Số lượng item trên 1 trang
 const PAGE_SIZE = 10
 export default function DishTable() {
+  const t = useTranslations('ManageDishes')
+  const tDishStatus = useTranslations('DishStatusLabel')
   const searchParam = useSearchParams()
   const page = searchParam.get('page') ? Number(searchParam.get('page')) : 1
   const pageIndex = page - 1
@@ -188,6 +121,68 @@ export default function DishTable() {
   const [dishDelete, setDishDelete] = useState<DishItem | null>(null)
   const dishListQuery = useGetDishList()
   const data = dishListQuery.data?.payload.data ?? []
+  const columns: ColumnDef<DishItem>[] = [
+    { accessorKey: 'id', header: 'ID' },
+    {
+      accessorKey: 'image',
+      header: t('columnImage'),
+      cell: ({ row }) => (
+        <div>
+          <Avatar className='aspect-square w-[100px] h-[100px] rounded-md object-cover'>
+            <AvatarImage src={row.getValue('image')} />
+            <AvatarFallback className='rounded-none'>{row.original.name}</AvatarFallback>
+          </Avatar>
+        </div>
+      )
+    },
+    {
+      accessorKey: 'name',
+      header: t('columnName'),
+      cell: ({ row }) => <div className='capitalize'>{row.getValue('name')}</div>
+    },
+    {
+      accessorKey: 'price',
+      header: t('columnPrice'),
+      cell: ({ row }) => <div className='capitalize'>{formatCurrency(row.getValue('price'))}</div>
+    },
+    {
+      accessorKey: 'description',
+      header: t('columnDescription'),
+      cell: ({ row }) => (
+        <div dangerouslySetInnerHTML={{ __html: row.getValue('description') }} className='whitespace-pre-line' />
+      )
+    },
+    {
+      accessorKey: 'status',
+      header: t('columnStatus'),
+      cell: ({ row }) => <div>{tDishStatus(row.getValue<string>('status'))}</div>
+    },
+    {
+      id: 'actions',
+      enableHiding: false,
+      cell: function Actions({ row }) {
+        const { setDishIdEdit, setDishDelete } = useContext(DishTableContext)
+        const openEditDish = () => { setDishIdEdit(row.original.id) }
+        const openDeleteDish = () => { setDishDelete(row.original) }
+        return (
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='h-8 w-8 p-0'>
+                <span className='sr-only'>Open menu</span>
+                <DotsHorizontalIcon className='h-4 w-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              <DropdownMenuLabel>{t('actions')}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={openEditDish}>{t('edit')}</DropdownMenuItem>
+              <DropdownMenuItem onClick={openDeleteDish}>{t('delete')}</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      }
+    }
+  ]
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -234,7 +229,7 @@ export default function DishTable() {
         <AlertDialogDeleteDish dishDelete={dishDelete} setDishDelete={setDishDelete} />
         <div className='flex items-center py-4'>
           <Input
-            placeholder='Lọc tên'
+            placeholder={t('filterName')}
             value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
             onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
             className='max-w-sm'
@@ -270,7 +265,7 @@ export default function DishTable() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className='h-24 text-center'>
-                    No results.
+                    {t('noResults')}
                   </TableCell>
                 </TableRow>
               )}
@@ -279,8 +274,8 @@ export default function DishTable() {
         </div>
         <div className='flex items-center justify-end space-x-2 py-4'>
           <div className='text-xs text-muted-foreground py-4 flex-1 '>
-            Hiển thị <strong>{table.getPaginationRowModel().rows.length}</strong> trong <strong>{data.length}</strong>{' '}
-            kết quả
+            {t('showing')} <strong>{table.getPaginationRowModel().rows.length}</strong> {t('of')} <strong>{data.length}</strong>{' '}
+            {t('results')}
           </div>
           <div>
             <AutoPagination

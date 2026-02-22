@@ -20,46 +20,49 @@ import { formatCurrency, getVietnameseDishStatus, simpleMatchText } from '@/lib/
 import { Input } from '@/components/ui/input'
 import Image from 'next/image'
 import { useGetDishList } from '@/queries/useDish'
+import { useTranslations } from 'next-intl'
 
 type DishItem = DishListResType['data'][0]
-export const columns: ColumnDef<DishItem>[] = [
-  {
-    id: 'dishName',
-    header: 'Món ăn',
-    cell: ({ row }) => (
-      <div className='flex items-center space-x-4'>
-        <Image
-          src={row.original.image}
-          alt={row.original.name}
-          width={50}
-          height={50}
-          className='rounded-md object-cover w-[50px] h-[50px]'
-        />
-        <span>{row.original.name}</span>
-      </div>
-    ),
-    filterFn: (row, columnId, filterValue: string) => {
-      if (filterValue === undefined) return true
-      return simpleMatchText(String(row.original.name), String(filterValue))
-    }
-  },
-  {
-    accessorKey: 'price',
-    header: 'Giá cả',
-    cell: ({ row }) => <div className='capitalize'>{formatCurrency(row.getValue('price'))}</div>
-  },
-  {
-    accessorKey: 'status',
-    header: 'Trạng thái',
-    cell: ({ row }) => <div>{getVietnameseDishStatus(row.getValue('status'))}</div>
-  }
-]
 
 const PAGE_SIZE = 10
 export function DishesDialog({ onChoose }: { onChoose: (dish: DishItem) => void }) {
+  const t = useTranslations('ManageOrders')
+  const tDishStatus = useTranslations('DishStatusLabel')
   const [open, setOpen] = useState(false)
   const dishListQuery = useGetDishList()
-  const data = dishListQuery.data?.payload.data || []  
+  const data = dishListQuery.data?.payload.data || []
+  const columns: ColumnDef<DishItem>[] = [
+    {
+      id: 'dishName',
+      header: t('columnDish'),
+      cell: ({ row }) => (
+        <div className='flex items-center space-x-4'>
+          <Image
+            src={row.original.image}
+            alt={row.original.name}
+            width={50}
+            height={50}
+            className='rounded-md object-cover w-[50px] h-[50px]'
+          />
+          <span>{row.original.name}</span>
+        </div>
+      ),
+      filterFn: (row, columnId, filterValue: string) => {
+        if (filterValue === undefined) return true
+        return simpleMatchText(String(row.original.name), String(filterValue))
+      }
+    },
+    {
+      accessorKey: 'price',
+      header: t('columnPrice'),
+      cell: ({ row }) => <div className='capitalize'>{formatCurrency(row.getValue('price'))}</div>
+    },
+    {
+      accessorKey: 'status',
+      header: t('columnStatus'),
+      cell: ({ row }) => <div>{tDishStatus(row.getValue<string>('status'))}</div>
+    }
+  ]
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -106,17 +109,17 @@ export function DishesDialog({ onChoose }: { onChoose: (dish: DishItem) => void 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant='outline'>Thay đổi</Button>
+        <Button variant='outline'>{t('changeDish')}</Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[600px] max-h-full overflow-auto'>
         <DialogHeader>
-          <DialogTitle>Chọn món ăn</DialogTitle>
+          <DialogTitle>{t('selectDish')}</DialogTitle>
         </DialogHeader>
         <div>
           <div className='w-full'>
             <div className='flex items-center py-4'>
               <Input
-                placeholder='Lọc tên'
+                placeholder={t('filterDishName')}
                 value={(table.getColumn('dishName')?.getFilterValue() as string) ?? ''}
                 onChange={(event) => table.getColumn('dishName')?.setFilterValue(event.target.value)}
                 className='max-w-sm'
@@ -167,8 +170,8 @@ export function DishesDialog({ onChoose }: { onChoose: (dish: DishItem) => void 
             </div>
             <div className='flex items-center justify-end space-x-2 py-4'>
               <div className='text-xs text-muted-foreground py-4 flex-1 '>
-                Hiển thị <strong>{table.getPaginationRowModel().rows.length}</strong> trong{' '}
-                <strong>{data.length}</strong> kết quả
+                {t('showing')} <strong>{table.getPaginationRowModel().rows.length}</strong> {t('of')}{' '}
+                <strong>{data.length}</strong> {t('results')}
               </div>
               <div>
                 <AutoPagination

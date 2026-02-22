@@ -11,16 +11,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useLogoutMutation } from '@/queries/useAuth'
-// import { ca } from 'zod/locales'
 import { handleErrorApi } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useAccountMe } from '@/queries/useAccount'
 import { useAppStore } from '@/components/app-provider'
+import { useTranslations } from 'next-intl'
 
 
 
 export default function DropdownAvatar() {
+  const t = useTranslations('DropdownAvatar')
   const logoutMutation = useLogoutMutation()
   const router = useRouter()
   const {data} = useAccountMe()
@@ -34,9 +35,7 @@ export default function DropdownAvatar() {
       await logoutMutation.mutateAsync()
       setRole(undefined)
       disconnectSocket()
-      //console.log('[ui/logout] mutateAsync result:', res)
-      // navigate after successful logout
-        toast.success('Đăng xuất thành công')
+        toast.success(t('logoutSuccess'))
         router.push('/')
     }catch(error:any){
       console.error('[ui/logout] mutation error:', error)
@@ -58,12 +57,12 @@ export default function DropdownAvatar() {
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href={'/manage/setting'} className='cursor-pointer'>
-            Cài đặt
+            {t('settings')}
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>Hỗ trợ</DropdownMenuItem>
+        <DropdownMenuItem>{t('support')}</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>Đăng xuất</DropdownMenuItem>
+        <DropdownMenuItem onClick={logout}>{t('logout')}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

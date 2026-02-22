@@ -40,8 +40,11 @@ import { useAddDishMutation } from "@/queries/useDish";
 import { useUploadMediaMutation } from "@/queries/useMedia";
 import { toast } from "sonner";
 import revalidateApiRequest from "@/apiRequests/revalidate";
+import { useTranslations } from "next-intl";
 
 export default function AddDish() {
+  const t = useTranslations('ManageDishes')
+  const tDishStatus = useTranslations('DishStatusLabel')
   const [file, setFile] = useState<File | null>(null);
   const [open, setOpen] = useState(false);
   const addDishMutation = useAddDishMutation();
@@ -88,7 +91,7 @@ export default function AddDish() {
       }
       const result = await addDishMutation.mutateAsync(body);
       await revalidateApiRequest('dishes')
-      toast.success(result.payload.message);
+      toast.success(t('createSuccess'));
       reset();
       setOpen(false);
     } catch (error) {
@@ -102,13 +105,13 @@ export default function AddDish() {
         <Button size="sm" className="h-7 gap-1">
           <PlusCircle className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Thêm món ăn
+            {t('addTitle')}
           </span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-screen overflow-auto">
         <DialogHeader>
-          <DialogTitle>Thêm món ăn</DialogTitle>
+          <DialogTitle>{t('addTitle')}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -130,7 +133,7 @@ export default function AddDish() {
                       <Avatar className="aspect-square w-[100px] h-[100px] rounded-md object-cover">
                         <AvatarImage src={previewAvatarFromFile} />
                         <AvatarFallback className="rounded-none">
-                          {name || "Ảnh Món Ăn"}
+                          {name || t('dishImageFallback')}
                         </AvatarFallback>
                       </Avatar>
                       <input
@@ -167,7 +170,7 @@ export default function AddDish() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-4 items-center justify-items-start gap-4">
-                      <Label htmlFor="name">Tên món ăn</Label>
+                      <Label htmlFor="name">{t('fieldName')}</Label>
                       <div className="col-span-3 w-full space-y-2">
                         <Input id="name" className="w-full" {...field} />
                         <FormMessage />
@@ -182,7 +185,7 @@ export default function AddDish() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-4 items-center justify-items-start gap-4">
-                      <Label htmlFor="price">Giá</Label>
+                      <Label htmlFor="price">{t('fieldPrice')}</Label>
                       <div className="col-span-3 w-full space-y-2">
                         <Input
                           id="price"
@@ -202,7 +205,7 @@ export default function AddDish() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-4 items-center justify-items-start gap-4">
-                      <Label htmlFor="description">Mô tả sản phẩm</Label>
+                      <Label htmlFor="description">{t('fieldDescription')}</Label>
                       <div className="col-span-3 w-full space-y-2">
                         <Textarea
                           id="description"
@@ -221,7 +224,7 @@ export default function AddDish() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-4 items-center justify-items-start gap-4">
-                      <Label htmlFor="description">Trạng thái</Label>
+                      <Label htmlFor="description">{t('fieldStatus')}</Label>
                       <div className="col-span-3 w-full space-y-2">
                         <Select
                           onValueChange={field.onChange}
@@ -229,13 +232,13 @@ export default function AddDish() {
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Chọn trạng thái" />
+                              <SelectValue placeholder={t('selectStatus')} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             {DishStatusValues.map((status) => (
                               <SelectItem key={status} value={status}>
-                                {getVietnameseDishStatus(status)}
+                                {tDishStatus(status)}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -252,7 +255,7 @@ export default function AddDish() {
         </Form>
         <DialogFooter>
           <Button type="submit" form="add-dish-form">
-            Thêm
+            {t('add')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -14,19 +14,22 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { GetOrdersResType } from '@/schemaValidations/order.schema'
 import { useContext } from 'react'
-import { formatCurrency, formatDateTimeToLocaleString, getVietnameseOrderStatus, simpleMatchText } from '@/lib/utils'
+import { formatCurrency, formatDateTimeToLocaleString, simpleMatchText } from '@/lib/utils'
 import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import { OrderStatus, OrderStatusValues } from '@/constants/type'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { OrderTableContext } from '@/app/[locale]/manage/orders/order-table'
 import OrderGuestDetail from '@/app/[locale]/manage/orders/order-guest-detail'
+import { useTranslations } from 'next-intl'
 
 type OrderItem = GetOrdersResType['data'][0]
-const orderTableColumns: ColumnDef<OrderItem>[] = [
+type TFunction = ReturnType<typeof useTranslations>
+
+const orderTableColumns = (t: TFunction): ColumnDef<OrderItem>[] => [
   {
     accessorKey: 'tableNumber',
-    header: 'Bàn',
+    header: t('columnTable'),
     cell: ({ row }) => <div>{row.getValue('tableNumber')}</div>,
     filterFn: (row, columnId, filterValue: string) => {
       if (filterValue === undefined) return true
@@ -35,15 +38,16 @@ const orderTableColumns: ColumnDef<OrderItem>[] = [
   },
   {
     id: 'guestName',
-    header: 'Khách hàng',
+    header: t('columnCustomer'),
     cell: function Cell({ row }) {
       const { orderObjectByGuestId } = useContext(OrderTableContext)
+      const tCell = useTranslations('ManageOrders')
       const guest = row.original.guest
       return (
         <div>
           {!guest && (
             <div>
-              <span>Đã bị xóa</span>
+              <span>{tCell('deletedGuest')}</span>
             </div>
           )}
           {guest && (
@@ -69,7 +73,7 @@ const orderTableColumns: ColumnDef<OrderItem>[] = [
   },
   {
     id: 'dishName',
-    header: 'Món ăn',
+    header: t('columnDish'),
     cell: ({ row }) => (
       <div className='flex items-center gap-2'>
         <Popover>
@@ -114,9 +118,10 @@ const orderTableColumns: ColumnDef<OrderItem>[] = [
   },
   {
     accessorKey: 'status',
-    header: 'Trạng thái',
+    header: t('columnStatus'),
     cell: function Cell({ row }) {
       const { changeStatus } = useContext(OrderTableContext)
+      const tStatus = useTranslations('OrderStatusLabel')
       const changeOrderStatus = async (status: (typeof OrderStatusValues)[number]) => {
         changeStatus({
           orderId: row.original.id,
@@ -139,7 +144,7 @@ const orderTableColumns: ColumnDef<OrderItem>[] = [
           <SelectContent>
             {OrderStatusValues.map((status) => (
               <SelectItem key={status} value={status}>
-                {getVietnameseOrderStatus(status)}
+                {tStatus(status)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -149,12 +154,12 @@ const orderTableColumns: ColumnDef<OrderItem>[] = [
   },
   {
     id: 'orderHandlerName',
-    header: 'Người xử lý',
+    header: t('columnHandler'),
     cell: ({ row }) => <div>{row.original.orderHandler?.name ?? ''}</div>
   },
   {
     accessorKey: 'createdAt',
-    header: () => <div>Tạo/Cập nhật</div>,
+    header: () => <div>{t('columnUpdated')}</div>,
     cell: ({ row }) => (
       <div className='space-y-2 text-sm'>
         <div className='flex items-center space-x-4'>{formatDateTimeToLocaleString(row.getValue('createdAt'))}</div>
@@ -169,6 +174,7 @@ const orderTableColumns: ColumnDef<OrderItem>[] = [
     enableHiding: false,
     cell: function Actions({ row }) {
       const { setOrderIdEdit } = useContext(OrderTableContext)
+      const tActions = useTranslations('ManageOrders')
       const openEditOrder = () => {
         setOrderIdEdit(row.original.id)
       }
@@ -182,9 +188,9 @@ const orderTableColumns: ColumnDef<OrderItem>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>{tActions('actions')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={openEditOrder}>Sửa</DropdownMenuItem>
+            <DropdownMenuItem onClick={openEditOrder}>{tActions('edit')}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

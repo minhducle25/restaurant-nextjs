@@ -33,36 +33,9 @@ import { Input } from "@/components/ui/input";
 import { TableListResType } from "@/schemaValidations/table.schema";
 import { TableStatus } from "@/constants/type";
 import { useGetTableList } from "@/queries/useTable";
+import { useTranslations } from "next-intl";
 
 type TableItem = TableListResType["data"][0];
-
-export const columns: ColumnDef<TableItem>[] = [
-  {
-    accessorKey: "number",
-    header: "Số bàn",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("number")}</div>
-    ),
-    filterFn: (row, columnId, filterValue: string) => {
-      if (filterValue === undefined) return true;
-      return simpleMatchText(String(row.original.number), String(filterValue));
-    },
-  },
-  {
-    accessorKey: "capacity",
-    header: "Sức chứa",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("capacity")}</div>
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: "Trạng thái",
-    cell: ({ row }) => (
-      <div>{getVietnameseTableStatus(row.getValue("status"))}</div>
-    ),
-  },
-];
 
 const PAGE_SIZE = 10;
 
@@ -71,7 +44,36 @@ export function TablesDialog({
 }: {
   onChoose: (table: TableItem) => void;
 }) {
+  const t = useTranslations("ManageOrders");
+  const tTableStatus = useTranslations("TableStatusLabel");
   const [open, setOpen] = useState(false);
+  const columns: ColumnDef<TableItem>[] = [
+    {
+      accessorKey: "number",
+      header: t("columnTableNumber"),
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("number")}</div>
+      ),
+      filterFn: (row, columnId, filterValue: string) => {
+        if (filterValue === undefined) return true;
+        return simpleMatchText(String(row.original.number), String(filterValue));
+      },
+    },
+    {
+      accessorKey: "capacity",
+      header: t("columnCapacity"),
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("capacity")}</div>
+      ),
+    },
+    {
+      accessorKey: "status",
+      header: t("columnStatus"),
+      cell: ({ row }) => (
+        <div>{tTableStatus(row.getValue<string>("status"))}</div>
+      ),
+    },
+  ];
   const tableListQuery = useGetTableList();
   const data = tableListQuery.data?.payload.data ?? [];
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -120,17 +122,17 @@ export function TablesDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Thay đổi</Button>
+        <Button variant="outline">{t("changeDish")}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-full overflow-auto">
         <DialogHeader>
-          <DialogTitle>Chọn bàn</DialogTitle>
+          <DialogTitle>{t("selectTableTitle")}</DialogTitle>
         </DialogHeader>
         <div>
           <div className="w-full">
             <div className="flex items-center py-4">
               <Input
-                placeholder="Số bàn"
+                placeholder={t("filterTableNumber")}
                 value={
                   (table.getColumn("number")?.getFilterValue() as string) ?? ""
                 }
@@ -207,9 +209,9 @@ export function TablesDialog({
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
               <div className="text-xs text-muted-foreground py-4 flex-1 ">
-                Hiển thị{" "}
+                {t("showing")}{" "}
                 <strong>{table.getPaginationRowModel().rows.length}</strong>{" "}
-                trong <strong>{data.length}</strong> kết quả
+                {t("of")} <strong>{data.length}</strong> {t("results")}
               </div>
               <div>
                 <AutoPagination

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/select";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { routing } from "@/i18n/routing";
 
 export function SwitchLanguage() {
@@ -16,9 +17,12 @@ export function SwitchLanguage() {
   const t = useTranslations("SwitchLanguage");
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const handleChange = (newLocale: string) => {
-    router.replace(pathname, { locale: newLocale });
+    const search = searchParams.toString();
+    const href = search ? (`${pathname}?${search}` as Parameters<typeof router.replace>[0]) : pathname;
+    router.replace(href, { locale: newLocale });
   };
 
   return (

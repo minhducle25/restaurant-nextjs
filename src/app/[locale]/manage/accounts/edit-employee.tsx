@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslations } from 'next-intl'
 
 export default function EditEmployee({
   id,
@@ -40,6 +41,7 @@ export default function EditEmployee({
   setId: (value: number | undefined) => void
   onSubmitSuccess?: () => void
 }) {
+  const t = useTranslations('ManageAccounts')
   const [file, setFile] = useState<File | null>(null)
   const avatarInputRef = useRef<HTMLInputElement | null>(null)
   const {data} = useGetAccount({
@@ -102,7 +104,7 @@ export default function EditEmployee({
           };
         }
         const result = await updateEmployeeMutation.mutateAsync(body);
-        toast.success(result.payload.message);
+        toast.success(t('editSuccess'));
         reset()
         onSubmitSuccess && onSubmitSuccess();
       } catch (error) {
@@ -125,8 +127,8 @@ export default function EditEmployee({
     >
       <DialogContent className='sm:max-w-[600px] max-h-screen overflow-auto'>
         <DialogHeader>
-          <DialogTitle>Cập nhật tài khoản</DialogTitle>
-          <DialogDescription>Các trường tên, email, mật khẩu là bắt buộc</DialogDescription>
+          <DialogTitle>{t('updateTitle')}</DialogTitle>
+          <DialogDescription>{t('updateDesc')}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form noValidate className='grid auto-rows-max items-start gap-4 md:gap-8' id='edit-employee-form' onSubmit={form.handleSubmit(onSubmit, e => {console.log(e)})}>
@@ -173,7 +175,7 @@ export default function EditEmployee({
                 render={({ field }) => (
                   <FormItem>
                     <div className='grid grid-cols-4 items-center justify-items-start gap-4'>
-                      <Label htmlFor='name'>Tên</Label>
+                      <Label htmlFor='name'>{t('fieldName')}</Label>
                       <div className='col-span-3 w-full space-y-2'>
                         <Input id='name' className='w-full' {...field} />
                         <FormMessage />
@@ -211,7 +213,7 @@ export default function EditEmployee({
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Chọn role:" />
+                              <SelectValue placeholder={t('selectRole')} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -236,7 +238,7 @@ export default function EditEmployee({
                 render={({ field }) => (
                   <FormItem>
                     <div className='grid grid-cols-4 items-center justify-items-start gap-4'>
-                      <Label htmlFor='email'>Đổi mật khẩu</Label>
+                      <Label htmlFor='email'>{t('fieldChangePassword')}</Label>
                       <div className='col-span-3 w-full space-y-2'>
                         <Switch checked={field.value} onCheckedChange={field.onChange} />
                         <FormMessage />
@@ -252,7 +254,7 @@ export default function EditEmployee({
                   render={({ field }) => (
                     <FormItem>
                       <div className='grid grid-cols-4 items-center justify-items-start gap-4'>
-                        <Label htmlFor='password'>Mật khẩu mới</Label>
+                        <Label htmlFor='password'>{t('fieldNewPassword')}</Label>
                         <div className='col-span-3 w-full space-y-2'>
                           <Input id='password' className='w-full' type='password' {...field} />
                           <FormMessage />
@@ -269,7 +271,7 @@ export default function EditEmployee({
                   render={({ field }) => (
                     <FormItem>
                       <div className='grid grid-cols-4 items-center justify-items-start gap-4'>
-                        <Label htmlFor='confirmPassword'>Xác nhận mật khẩu mới</Label>
+                        <Label htmlFor='confirmPassword'>{t('fieldConfirmNewPassword')}</Label>
                         <div className='col-span-3 w-full space-y-2'>
                           <Input id='confirmPassword' className='w-full' type='password' {...field} />
                           <FormMessage />
@@ -284,7 +286,7 @@ export default function EditEmployee({
         </Form>
         <DialogFooter>
           <Button type='submit' form='edit-employee-form'>
-            Lưu
+            {t('save')}
           </Button>
         </DialogFooter>
       </DialogContent>
