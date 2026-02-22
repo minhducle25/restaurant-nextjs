@@ -337,5 +337,58 @@
     "unpaid": "Đơn chưa thanh toán: - {count} món",
     "paidDesc": "Khách hàng #{name} tại bàn {tableNumber} đã thanh toán thành công {count} đơn hàng",
     "orderUpdatedDesc": "Món {name} vừa được cập nhật sang \"{status}\""
+  },
+  "TermsPage": {
+    "title": "Điều Khoản Dịch Vụ",
+    "description": "Vui lòng đọc kỹ các điều khoản dịch vụ của Nhà Hàng Big Boy trước khi sử dụng.",
+    "lastUpdated": "Cập nhật lần cuối: 01/01/2025",
+    "section1Title": "1. Chấp Nhận Điều Khoản",
+    "section1Content": "Khi sử dụng dịch vụ của chúng tôi, bạn đồng ý tuân theo các điều khoản và điều kiện được nêu trong tài liệu này. Nếu bạn không đồng ý với bất kỳ phần nào, vui lòng ngừng sử dụng dịch vụ.",
+    "section2Title": "2. Sử Dụng Dịch Vụ",
+    "section2Content": "Bạn đồng ý sử dụng dịch vụ chỉ cho các mục đích hợp pháp và theo cách không vi phạm quyền của bất kỳ bên thứ ba nào. Bạn chịu trách nhiệm đảm bảo rằng tất cả các thông tin bạn cung cấp là chính xác và đầy đủ.",
+    "section3Title": "3. Đặt Món & Thanh Toán",
+    "section3Content": "Tất cả đơn đặt món đều phải được thanh toán đầy đủ trước khi rời khỏi nhà hàng. Chúng tôi chấp nhận thanh toán bằng tiền mặt và các hình thức thanh toán điện tử được hỗ trợ.",
+    "section4Title": "4. Hủy Đơn Hàng",
+    "section4Content": "Đơn hàng có thể bị hủy trong vòng 5 phút sau khi đặt. Sau thời gian này, chúng tôi không thể đảm bảo việc hủy đơn sẽ thành công vì bếp có thể đã bắt đầu chuẩn bị món ăn.",
+    "section5Title": "5. Liên Hệ",
+    "section5Content": "Nếu bạn có bất kỳ câu hỏi nào về các điều khoản này, vui lòng liên hệ với chúng tôi qua email hoặc đến trực tiếp nhà hàng."
+  },
+  "AboutPage": {
+    "title": "Về Chúng Tôi",
+    "description": "Tìm hiểu về câu chuyện, sứ mệnh và giá trị của Nhà Hàng Big Boy.",
+    "storyTitle": "Câu Chuyện Của Chúng Tôi",
+    "storyContent": "Nhà Hàng Big Boy được thành lập với niềm đam mê ẩm thực và mong muốn mang đến những trải nghiệm ăn uống tuyệt vời cho thực khách. Chúng tôi tự hào phục vụ những món ăn ngon với nguyên liệu tươi sạch, được chế biến bởi đội ngũ đầu bếp giàu kinh nghiệm.",
+    "missionTitle": "Sứ Mệnh",
+    "missionContent": "Sứ mệnh của chúng tôi là mang lại những bữa ăn ngon, không gian ấm cúng và dịch vụ chu đáo. Chúng tôi tin rằng mỗi bữa ăn là một kỷ niệm đáng nhớ, và chúng tôi nỗ lực hết mình để tạo ra điều đó.",
+    "valuesTitle": "Giá Trị Cốt Lõi",
+    "value1": "Chất lượng: Luôn sử dụng nguyên liệu tươi ngon nhất",
+    "value2": "Tận tâm: Phục vụ khách hàng với sự chân thành",
+    "value3": "Sáng tạo: Không ngừng đổi mới thực đơn",
+    "value4": "Cộng đồng: Đóng góp cho sự phát triển địa phương",
+    "contactTitle": "Liên Hệ Với Chúng Tôi",
+    "contactContent": "Hãy ghé thăm chúng tôi hoặc liên hệ qua email để biết thêm thông tin. Chúng tôi luôn sẵn sàng lắng nghe và phục vụ bạn."
+  },
+  "PrivacyPage": {
+    "title": "Chính Sách Bảo Mật",
+    "description": "Chính sách bảo mật của Nhà Hàng Big Boy mô tả cách chúng tôi thu thập, sử dụng và bảo vệ thông tin cá nhân của bạn.",
+    "lastUpdated": "Cập nhật lần cuối: 01/01/2025",
+    "section1Title": "1. Thông Tin Chúng Tôi Thu Thập",
+    "section1Content": "Chúng tôi có thể thu thập thông tin bạn cung cấp trực tiếp, bao gồm tên, số bàn và thông tin đặt món. Chúng tôi cũng thu thập thông tin sử dụng dịch vụ để cải thiện trải nghiệm của bạn.",
+    "section2Title": "2. Cách Chúng Tôi Sử Dụng Thông Tin",
+    "section2Content": "Thông tin của bạn được sử dụng để xử lý đơn hàng, cải thiện dịch vụ và liên lạc với bạn khi cần thiết. Chúng tôi không bán thông tin cá nhân của bạn cho bên thứ ba.",
+    "section3Title": "3. Bảo Mật Thông Tin",
+    "section3Content": "Chúng tôi áp dụng các biện pháp bảo mật kỹ thuật và tổ chức phù hợp để bảo vệ thông tin cá nhân của bạn khỏi truy cập trái phép, mất mát hoặc tiết lộ.",
+    "section4Title": "4. Chia Sẻ Thông Tin",
+    "section4Content": "Chúng tôi không chia sẻ thông tin cá nhân của bạn với bên thứ ba ngoại trừ khi cần thiết để cung cấp dịch vụ hoặc theo yêu cầu của pháp luật.",
+    "section5Title": "5. Quyền Của Bạn",
+    "section5Content": "Bạn có quyền yêu cầu truy cập, chỉnh sửa hoặc xóa thông tin cá nhân của mình. Để thực hiện các quyền này, vui lòng liên hệ với chúng tôi.",
+    "section6Title": "6. Liên Hệ",
+    "section6Content": "Nếu bạn có câu hỏi về chính sách bảo mật này, vui lòng liên hệ với chúng tôi qua email hoặc đến trực tiếp nhà hàng."
+  },
+  "Footer": {
+    "terms": "Điều khoản dịch vụ",
+    "privacy": "Chính sách bảo mật",
+    "about": "Về chúng tôi",
+    "rights": "© {year} Nhà Hàng Big Boy. Bảo lưu mọi quyền."
   }
 }

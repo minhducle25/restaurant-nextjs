@@ -8,6 +8,7 @@ import AppProvider from '@/components/app-provider'
 import { getTranslations } from 'next-intl/server'
 import { Locale, locales } from '@/config'
 import evnConfig from '@/config'
+import NextTopLoader from 'nextjs-toploader'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -75,6 +76,7 @@ export default async function RootLayout({
       <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)} suppressHydrationWarning >
         <AppProvider>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+          <NextTopLoader color='#f97316' showSpinner={false} />
           {children}
           <Toaster position="top-right" />
         </ThemeProvider>

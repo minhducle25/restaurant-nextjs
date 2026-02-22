@@ -337,5 +337,58 @@
     "unpaid": "Unpaid: - {count} dishes",
     "paidDesc": "Guest #{name} at table {tableNumber} paid {count} orders successfully",
     "orderUpdatedDesc": "Dish {name} was updated to \"{status}\""
+  },
+  "TermsPage": {
+    "title": "Terms of Service",
+    "description": "Please read the Big Boy Restaurant terms of service carefully before using our services.",
+    "lastUpdated": "Last updated: January 1, 2025",
+    "section1Title": "1. Acceptance of Terms",
+    "section1Content": "By using our services, you agree to be bound by the terms and conditions set forth in this document. If you do not agree with any part of these terms, please stop using the service.",
+    "section2Title": "2. Use of Service",
+    "section2Content": "You agree to use the service only for lawful purposes and in a way that does not infringe the rights of any third party. You are responsible for ensuring all information you provide is accurate and complete.",
+    "section3Title": "3. Orders & Payment",
+    "section3Content": "All orders must be fully paid before leaving the restaurant. We accept cash and supported electronic payment methods.",
+    "section4Title": "4. Order Cancellation",
+    "section4Content": "Orders may be cancelled within 5 minutes of placement. After this time, we cannot guarantee the cancellation will be successful as the kitchen may have already started preparing the food.",
+    "section5Title": "5. Contact Us",
+    "section5Content": "If you have any questions about these terms, please contact us by email or visit us in person."
+  },
+  "AboutPage": {
+    "title": "About Us",
+    "description": "Learn about the story, mission, and values of Big Boy Restaurant.",
+    "storyTitle": "Our Story",
+    "storyContent": "Big Boy Restaurant was founded with a passion for food and a desire to provide wonderful dining experiences for our guests. We take pride in serving delicious dishes made from fresh and clean ingredients, prepared by our experienced team of chefs.",
+    "missionTitle": "Our Mission",
+    "missionContent": "Our mission is to deliver great food, a warm atmosphere, and attentive service. We believe every meal is a memorable moment, and we strive with everything we have to create that for you.",
+    "valuesTitle": "Core Values",
+    "value1": "Quality: Always using the freshest and finest ingredients",
+    "value2": "Dedication: Serving customers with sincerity",
+    "value3": "Creativity: Continuously innovating our menu",
+    "value4": "Community: Contributing to local development",
+    "contactTitle": "Get In Touch",
+    "contactContent": "Come visit us or reach out via email for more information. We are always ready to listen and serve you."
+  },
+  "PrivacyPage": {
+    "title": "Privacy Policy",
+    "description": "Big Boy Restaurant's privacy policy describes how we collect, use, and protect your personal information.",
+    "lastUpdated": "Last updated: January 1, 2025",
+    "section1Title": "1. Information We Collect",
+    "section1Content": "We may collect information you directly provide, including your name, table number, and order details. We also collect service usage information to improve your experience.",
+    "section2Title": "2. How We Use Your Information",
+    "section2Content": "Your information is used to process orders, improve our services, and contact you when necessary. We do not sell your personal information to third parties.",
+    "section3Title": "3. Information Security",
+    "section3Content": "We implement appropriate technical and organizational security measures to protect your personal information from unauthorized access, loss, or disclosure.",
+    "section4Title": "4. Information Sharing",
+    "section4Content": "We do not share your personal information with third parties except as necessary to provide the service or as required by law.",
+    "section5Title": "5. Your Rights",
+    "section5Content": "You have the right to request access to, correction of, or deletion of your personal information. To exercise these rights, please contact us.",
+    "section6Title": "6. Contact Us",
+    "section6Content": "If you have questions about this privacy policy, please contact us by email or visit us in person."
+  },
+  "Footer": {
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "about": "About Us",
+    "rights": "© {year} Big Boy Restaurant. All rights reserved."
   }
 }
