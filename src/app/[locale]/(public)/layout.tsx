@@ -5,7 +5,6 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { ModeToggle } from '@/components/ui/dark-mode-toggle'
 import NavItems from '@/app/[locale]/(public)/nav-items'
 import { SwitchLanguage } from '@/components/switch-language'
-import PublicFooter from '@/app/[locale]/(public)/public-footer'
 
 export default async function Layout({
   children,
@@ -48,7 +47,6 @@ export default async function Layout({
         </div>
       </header>
       <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>{children} {modal}</main>
-      <PublicFooter />
     </div>
   )
 }

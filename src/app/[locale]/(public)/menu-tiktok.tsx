@@ -17,6 +17,7 @@ import NavItems from "@/app/[locale]/(public)/nav-items";
 import { SwitchLanguage } from "@/components/switch-language";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 type DishItem = DishListResType["data"][number];
 
@@ -32,6 +33,8 @@ export default function MenuTikTok({
   dishList: DishListResType["data"];
 }) {
   const t = useTranslations("GuestMenu");
+  const tf = useTranslations("Footer");
+  const locale = useLocale();
   const [likedItems, setLikedItems] = useState<Record<number, boolean>>({});
   const [themeMode, setThemeMode] = useState<"dark" | "light" | "system">(
     "system"
@@ -253,6 +256,43 @@ export default function MenuTikTok({
             </div>
           </div>
         ))}
+
+        {/* FOOTER SLIDE */}
+        <div className="h-screen w-full snap-start relative flex flex-col items-center justify-center px-6 bg-black">
+          {/* Subtle radial glow */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.12)_0%,transparent_70%)] pointer-events-none" />
+
+          <div className="relative z-10 flex flex-col items-center gap-8 text-center max-w-md">
+            {/* Logo */}
+            <div className="w-20 h-20 bg-linear-to-tr from-orange-600 to-orange-400 rounded-2xl flex items-center justify-center text-white font-extrabold text-3xl shadow-[0_0_40px_rgba(249,115,22,0.5)]">
+              BB
+            </div>
+
+            <div>
+              <p className="text-3xl font-black text-white tracking-tight">Big Boy</p>
+              <p className="text-sm text-slate-400 mt-1">
+                {locale === 'vi' ? 'Vị ngon, trọn khoảnh khắc' : 'Delicious food, unforgettable experience'}
+              </p>
+            </div>
+
+            {/* Links */}
+            <nav className="flex flex-wrap justify-center gap-6 text-sm font-semibold">
+              <Link href='/about' className="text-slate-400 hover:text-orange-400 transition-colors">
+                {tf('about')}
+              </Link>
+              <Link href='/terms' className="text-slate-400 hover:text-orange-400 transition-colors">
+                {tf('terms')}
+              </Link>
+              <Link href='/privacy' className="text-slate-400 hover:text-orange-400 transition-colors">
+                {tf('privacy')}
+              </Link>
+            </nav>
+
+            <p className="text-xs text-slate-600">
+              {tf('rights', { year: new Date().getFullYear() })}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
