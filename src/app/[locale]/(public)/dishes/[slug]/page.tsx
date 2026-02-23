@@ -1,10 +1,11 @@
 import dishApiRequest from "@/apiRequests/dish";
 import DishDetail from "@/app/[locale]/(public)/dishes/[slug]/dish-detail";
-import { formatCurrency, getIdFromSlugUrl, htmlToTextForDescription, wrapServerApi } from "@/lib/utils";
-import Image from "next/image";
+import { getIdFromSlugUrl, htmlToTextForDescription, wrapServerApi } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Locale } from "@/config";
 import evnConfig from "@/config";
+import { getTranslations } from "next-intl/server";
+import { getDishKey, hasDishTranslation } from "@/lib/dish-i18n";
 
 export async function generateMetadata({
   params
@@ -15,6 +16,7 @@ export async function generateMetadata({
   const id = getIdFromSlugUrl(slug)
   const data = await wrapServerApi(() => dishApiRequest.get(Number(id)))
   const dish = data?.payload?.data
+  const tDishes = await getTranslations({ locale, namespace: 'Dishes' })
 
   if (!dish) {
     return {
@@ -23,8 +25,11 @@ export async function generateMetadata({
     }
   }
 
-  const title = dish.name
-  const description = htmlToTextForDescription(dish.description)
+  const dishName = hasDishTranslation(dish.name) ? tDishes(`${getDishKey(dish.name)}.name`) : dish.name
+  const dishDesc = hasDishTranslation(dish.name) ? tDishes(`${getDishKey(dish.name)}.description`) : dish.description
+
+  const title = dishName
+  const description = htmlToTextForDescription(dishDesc)
   const url = `${evnConfig.NEXT_PUBLIC_URL}/${locale}/dishes/${slug}`
 
   return {
@@ -45,7 +50,7 @@ export async function generateMetadata({
               url: dish.image,
               width: 800,
               height: 600,
-              alt: dish.name
+              alt: dishName
             }
           ]
         : undefined
@@ -68,15 +73,19 @@ export default async function DishPage({
   const id = getIdFromSlugUrl(slug);
 
   const data = await wrapServerApi(() => dishApiRequest.get(Number(id)));
+  const tDishes = await getTranslations({ locale, namespace: 'Dishes' });
 
   const dish = data?.payload?.data;
+  
+  const dishName = dish && hasDishTranslation(dish.name) ? tDishes(`${getDishKey(dish.name)}.name`) : dish?.name || ''
+  const dishDesc = dish && hasDishTranslation(dish.name) ? tDishes(`${getDishKey(dish.name)}.description`) : dish?.description || ''
 
   const menuItemJsonLd = dish
     ? {
         '@context': 'https://schema.org',
         '@type': 'MenuItem',
-        name: dish.name,
-        description: htmlToTextForDescription(dish.description),
+        name: dishName,
+        description: htmlToTextForDescription(dishDesc),
         image: dish.image,
         url: `${evnConfig.NEXT_PUBLIC_URL}/${locale}/dishes/${slug}`,
         offers: {
@@ -89,12 +98,45 @@ export default async function DishPage({
       }
     : null
 
+  const breadcrumbJsonLd = dish
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: `${evnConfig.NEXT_PUBLIC_URL}/${locale}`
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Menu',
+            item: `${evnConfig.NEXT_PUBLIC_URL}/${locale}/dishes`
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: dishName,
+            item: `${evnConfig.NEXT_PUBLIC_URL}/${locale}/dishes/${slug}`
+          }
+        ]
+      }
+    : null
+
   return (
     <>
       {menuItemJsonLd && (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(menuItemJsonLd) }}
+        />
+      )}
+      {breadcrumbJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
       )}
       <DishDetail dish={dish} />

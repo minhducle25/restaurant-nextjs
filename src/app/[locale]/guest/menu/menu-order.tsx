@@ -8,14 +8,16 @@ import { useRouter } from "next/navigation";
 import { DishStatus } from "@/constants/type";
 import { useTranslations } from "next-intl";
 import { Heart, Star, ChevronUp, Plus, Minus } from "lucide-react";
+import { getDishKey, hasDishTranslation } from "@/lib/dish-i18n";
 
 const getRating = (id: number) => {
-  const ratings = [4.5, 4.6, 4.7, 4.8, 4.9, 5.0];
+  const ratings = [ 4.8, 4.9];
   return ratings[id % ratings.length];
 };
 
 export default function MenuOrder() {
   const t = useTranslations("GuestMenu");
+  const tDishes = useTranslations("Dishes");
   const { data } = useGetDishList();
   const dishes = data?.payload.data ?? [];
   const [orders, setOrder] = useState<GuestCreateOrdersBodyType>([]);
@@ -106,7 +108,7 @@ export default function MenuOrder() {
                 alt={dish.name}
                 className={cn(
                   "absolute inset-0 w-full h-full object-cover z-0",
-                  isUnavailable && "grayscale-[80%] brightness-50"
+                  isUnavailable && "grayscale-80 brightness-50"
                 )}
               />
               {/* Overlays */}
@@ -131,10 +133,10 @@ export default function MenuOrder() {
                     </div>
 
                     <h2 className="text-4xl md:text-6xl font-extrabold mb-2 leading-tight text-white drop-shadow-lg">
-                      {dish.name}
+                      {hasDishTranslation(dish.name) ? tDishes(`${getDishKey(dish.name)}.name`) : dish.name}
                     </h2>
                     <p className="text-base md:text-lg mb-6 line-clamp-3 text-slate-300 drop-shadow-md max-w-xl">
-                      {dish.description}
+                      {hasDishTranslation(dish.name) ? tDishes(`${getDishKey(dish.name)}.description`) : dish.description}
                     </p>
 
                     <div className="flex flex-wrap items-center gap-6">

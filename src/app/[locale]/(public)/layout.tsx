@@ -2,9 +2,9 @@ import Link from 'next/link'
 import { Menu, Package2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { ModeToggle } from '@/components/ui/dark-mode-toggle'
 import NavItems from '@/app/[locale]/(public)/nav-items'
 import { SwitchLanguage } from '@/components/switch-language'
+import { ModeToggle } from '@/components/ui/dark-mode-toggle'
 
 export default async function Layout({
   children,

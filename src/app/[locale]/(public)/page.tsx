@@ -8,8 +8,9 @@ import evnConfig from "@/config";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
-  params: {locale}
-}:{params: {locale: Locale}}): Promise<Metadata> {
+  params
+}:{params: Promise<{locale: Locale}>}): Promise<Metadata> {
+  const {locale} = await params
   const t = await getTranslations({locale, namespace: 'HomePage'});
   const description = htmlToTextForDescription(t('description'))
   const title = t('title')
@@ -52,9 +53,11 @@ export async function generateMetadata({
   }
 }
 export default async function Home({
-  params: {locale}}:
-  {params: {locale: string}
+  params
+}: {
+  params: Promise<{locale: string}>
 }) {
+  const {locale} = await params
   setRequestLocale(locale)
   const t = await getTranslations('HomePage');
   let dishList: DishListResType["data"] = [];
@@ -71,12 +74,32 @@ export default async function Home({
   const restaurantJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Restaurant',
+    '@id': `${evnConfig.NEXT_PUBLIC_URL}/#restaurant`,
     name: t('title'),
     description: t('description'),
     image: `${evnConfig.NEXT_PUBLIC_URL}/banner.png`,
     url: `${evnConfig.NEXT_PUBLIC_URL}/${locale}`,
-    servesCuisine: 'Vietnamese',
+    logo: `${evnConfig.NEXT_PUBLIC_URL}/favicon.ico`,
+    servesCuisine: ['Vietnamese', 'Asian'],
     priceRange: '$$',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: '123 Main Street',
+      addressLocality: 'Ho Chi Minh City',
+      addressRegion: 'HCM',
+      postalCode: '700000',
+      addressCountry: 'VN'
+    },
+    telephone: '+84-xxx-xxx-xxx',
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        opens: '09:00',
+        closes: '22:00'
+      }
+    ],
+    acceptsReservations: 'True',
     hasMenu: {
       '@type': 'Menu',
       hasMenuSection: {
@@ -88,12 +111,24 @@ export default async function Home({
           offers: {
             '@type': 'Offer',
             price: dish.price,
-            priceCurrency: 'VND'
+            priceCurrency: 'VND',
+            availability: 'https://schema.org/InStock'
           },
           image: dish.image
         }))
       }
-    }
+    },
+    // Aggregate rating (nếu có reviews trong tương lai)
+    // aggregateRating: {
+    //   '@type': 'AggregateRating',
+    //   ratingValue: '4.5',
+    //   reviewCount: '150'
+    // },
+    sameAs: [
+      // Thêm social media links khi có:
+      // 'https://www.facebook.com/minukitchen',
+      // 'https://www.instagram.com/minukitchen',
+    ]
   }
 
   return (

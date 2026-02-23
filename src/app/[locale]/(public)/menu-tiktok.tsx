@@ -1,14 +1,12 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
+import Image from "next/image";
 import {
   Heart,
   Star,
   Share2,
   ChevronUp,
-  Sun,
-  Moon,
-  Monitor,
 } from "lucide-react";
 import { DishListResType } from "@/schemaValidations/dish.schema";
 import { formatCurrency } from "@/lib/utils";
@@ -18,12 +16,13 @@ import { SwitchLanguage } from "@/components/switch-language";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
+import { getDishKey, hasDishTranslation } from "@/lib/dish-i18n";
 
 type DishItem = DishListResType["data"][number];
 
 // Hardcode placeholder rating dựa theo id để nhất quán
 const getRating = (id: number) => {
-  const ratings = [4.5, 4.6, 4.7, 4.8, 4.9, 5.0];
+  const ratings = [ 4.8, 4.9];
   return ratings[id % ratings.length];
 };
 
@@ -34,26 +33,13 @@ export default function MenuTikTok({
 }) {
   const t = useTranslations("GuestMenu");
   const tf = useTranslations("Footer");
+  const tDishes = useTranslations("Dishes");
   const locale = useLocale();
   const [likedItems, setLikedItems] = useState<Record<number, boolean>>({});
-  const [themeMode, setThemeMode] = useState<"dark" | "light" | "system">(
-    "system"
-  );
   const [copied, setCopied] = useState<number | null>(null);
 
-  // Subscribe to system color scheme preference (React 18 pattern)
-  const systemDark = useSyncExternalStore(
-    (cb) => {
-      const mq = window.matchMedia("(prefers-color-scheme: dark)");
-      mq.addEventListener("change", cb);
-      return () => mq.removeEventListener("change", cb);
-    },
-    () => window.matchMedia("(prefers-color-scheme: dark)").matches,
-    () => true // SSR snapshot
-  );
-
-  const isDark =
-    themeMode === "system" ? systemDark : themeMode === "dark";
+  // Luôn dùng dark mode cho homepage
+  const isDark = true;
 
   const toggleLike = (id: number) => {
     setLikedItems((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -84,10 +70,10 @@ export default function MenuTikTok({
         <div className="flex items-center gap-4 md:gap-8 pointer-events-auto">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <div className="w-9 h-9 bg-linear-to-tr from-orange-600 to-orange-400 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow-[0_0_15px_rgba(249,115,22,0.5)] hover:scale-105 transition-transform">
-              BB
+              M
             </div>
             <span className="text-white text-xl font-black tracking-tight drop-shadow-md hidden sm:block">
-              Big Boy
+              Minu Kitchen
             </span>
           </Link>
           <div className="hidden md:flex items-center gap-5 text-sm font-semibold text-slate-200">
@@ -95,44 +81,9 @@ export default function MenuTikTok({
           </div>
         </div>
 
-        {/* Right: Language + Theme */}
+        {/* Right: Language */}
         <div className="flex items-center gap-3 pointer-events-auto">
           <SwitchLanguage />
-          <div className="flex items-center p-1 rounded-full border bg-white/10 border-white/20 shadow-lg backdrop-blur-md">
-            <button
-              onClick={() => setThemeMode("light")}
-              className={`p-1.5 rounded-full transition-all ${
-                themeMode === "light"
-                  ? "bg-orange-500 text-white shadow-md"
-                  : "text-slate-400 hover:text-white"
-              }`}
-              title="Light Mode"
-            >
-              <Sun size={14} />
-            </button>
-            <button
-              onClick={() => setThemeMode("system")}
-              className={`p-1.5 rounded-full transition-all ${
-                themeMode === "system"
-                  ? "bg-slate-700 text-white shadow-md"
-                  : "text-slate-400 hover:text-white"
-              }`}
-              title="System Mode"
-            >
-              <Monitor size={14} />
-            </button>
-            <button
-              onClick={() => setThemeMode("dark")}
-              className={`p-1.5 rounded-full transition-all ${
-                themeMode === "dark"
-                  ? "bg-slate-800 text-white shadow-md border border-slate-600"
-                  : "text-slate-400 hover:text-white"
-              }`}
-              title="Dark Mode"
-            >
-              <Moon size={14} />
-            </button>
-          </div>
         </div>
       </nav>
 
@@ -150,17 +101,19 @@ export default function MenuTikTok({
 
       {/* SNAP SCROLL CONTAINER */}
       <div className="h-full w-full overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative z-0">
-        {dishList.map((dish) => (
+        {dishList.map((dish, index) => (
           <div
             key={dish.id}
             className="h-screen w-full snap-start relative group"
           >
             {/* Background image */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={dish.image}
               alt={dish.name}
-              className="absolute inset-0 w-full h-full object-cover z-0"
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              className="object-cover z-0"
             />
 
             {/* Gradient overlay — luôn dùng dark overlay để ảnh không bị chóa */}
@@ -192,11 +145,11 @@ export default function MenuTikTok({
                   </span>
 
                   <h2 className="text-4xl md:text-6xl font-extrabold mb-2 leading-tight text-white drop-shadow-lg">
-                    {dish.name}
+                    {hasDishTranslation(dish.name) ? tDishes(`${getDishKey(dish.name)}.name`) : dish.name}
                   </h2>
 
                   <p className="text-base md:text-lg mb-4 line-clamp-3 text-slate-200 drop-shadow-md">
-                    {dish.description}
+                    {hasDishTranslation(dish.name) ? tDishes(`${getDishKey(dish.name)}.description`) : dish.description}
                   </p>
 
                   <div className="text-3xl md:text-5xl font-black drop-shadow-md text-orange-400">
@@ -265,11 +218,11 @@ export default function MenuTikTok({
           <div className="relative z-10 flex flex-col items-center gap-8 text-center max-w-md">
             {/* Logo */}
             <div className="w-20 h-20 bg-linear-to-tr from-orange-600 to-orange-400 rounded-2xl flex items-center justify-center text-white font-extrabold text-3xl shadow-[0_0_40px_rgba(249,115,22,0.5)]">
-              BB
+              M
             </div>
 
             <div>
-              <p className="text-3xl font-black text-white tracking-tight">Big Boy</p>
+              <p className="text-3xl font-black text-white tracking-tight">Minu Kitchen</p>
               <p className="text-sm text-slate-400 mt-1">
                 {locale === 'vi' ? 'Vị ngon, trọn khoảnh khắc' : 'Delicious food, unforgettable experience'}
               </p>

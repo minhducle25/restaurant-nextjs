@@ -79,9 +79,9 @@ export default function LoginForm() {
       {/* Logo */}
       <div className='flex items-center justify-center gap-2 mb-6'>
         <div className='w-10 h-10 bg-linear-to-tr from-orange-600 to-orange-400 rounded-xl flex items-center justify-center text-white font-extrabold text-base shadow-[0_0_15px_rgba(249,115,22,0.5)]'>
-          BB
+          M
         </div>
-        <span className='text-xl font-black tracking-tight text-white'>Big Boy</span>
+        <span className='text-xl font-black tracking-tight text-white'>Minu Kitchen</span>
       </div>
 
       <h2 className='text-2xl font-bold mb-1 text-center text-white'>{t('title')}</h2>

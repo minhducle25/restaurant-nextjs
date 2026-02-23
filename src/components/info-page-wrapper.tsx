@@ -16,7 +16,7 @@ export default function InfoPageWrapper({
 }) {
   const t = useTranslations('Footer')
   const router = useRouter()
-  const [themeMode, setThemeMode] = useState<'dark' | 'light' | 'system'>('system')
+  const [themeMode, setThemeMode] = useState<'dark' | 'light' | 'system'>('dark')
 
   const systemDark = useSyncExternalStore(
     (cb) => {
@@ -59,14 +59,14 @@ export default function InfoPageWrapper({
           </button>
           <Link href='/' className='flex items-center gap-2 shrink-0'>
             <div className='w-9 h-9 bg-linear-to-tr from-orange-600 to-orange-400 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow-[0_0_15px_rgba(249,115,22,0.5)] hover:scale-105 transition-transform'>
-              BB
+              M
             </div>
             <span
               className={`text-xl font-black tracking-tight hidden sm:block ${
                 isDark ? 'text-white drop-shadow-md' : 'text-slate-900'
               }`}
             >
-              Big Boy
+              Minu Kitchen
             </span>
           </Link>
           <div

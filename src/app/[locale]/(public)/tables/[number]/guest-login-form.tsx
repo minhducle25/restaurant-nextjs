@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useForm } from 'react-hook-form'
@@ -61,11 +62,13 @@ export default function GuestLoginForm() {
       `}</style>
 
       {/* Background image */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src="https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
-        alt="Background"
-        className="absolute inset-0 w-full h-full object-cover"
+        alt="Restaurant background"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
       />
 
       {/* Overlay */}
@@ -76,9 +79,9 @@ export default function GuestLoginForm() {
         <div className="flex items-center gap-4 md:gap-8 pointer-events-auto">
           <div className="flex items-center gap-2 shrink-0">
             <div className="w-9 h-9 bg-linear-to-tr from-orange-600 to-orange-400 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow-[0_0_15px_rgba(249,115,22,0.5)] hover:scale-105 transition-transform">
-              BB
+              M
             </div>
-            <span className="text-white text-xl font-black tracking-tight hidden sm:block">Big Boy</span>
+            <span className="text-white text-xl font-black tracking-tight hidden sm:block">Minu Kitchen</span>
           </div>
           <div className="hidden md:flex items-center gap-5 text-sm font-medium text-slate-300">
             <NavItems className="hover:text-orange-400 transition-colors" />
@@ -96,9 +99,9 @@ export default function GuestLoginForm() {
           {/* Logo */}
           <div className="flex items-center justify-center gap-2 mb-6">
             <div className="w-10 h-10 bg-linear-to-tr from-orange-600 to-orange-400 rounded-xl flex items-center justify-center text-white font-extrabold text-base shadow-[0_0_15px_rgba(249,115,22,0.5)]">
-              BB
+              M
             </div>
-            <span className="text-xl font-black tracking-tight text-white">Big Boy</span>
+            <span className="text-xl font-black tracking-tight text-white">Minu Kitchen</span>
           </div>
 
           <h2 className="text-2xl font-bold mb-6 text-center text-white">

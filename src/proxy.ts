@@ -1,7 +1,6 @@
 import { Role } from "@/constants/type";
 import { TokenPayload } from "@/types/jwt.types";
 import { NextResponse, NextRequest } from "next/server";
-import  jwt  from "jsonwebtoken";
 import createIntlMiddleware from 'next-intl/middleware';
 import {routing} from './i18n/routing';
 
@@ -11,8 +10,27 @@ const guestPath = ["/guest"]
 const ownerPath = ["/manage/accounts"]
 const privatePaths = [...managePath, ...guestPath];
 
-const decodeToken = (token: string) => {
-  return jwt.decode(token) as TokenPayload;
+const decodeToken = (token: string): TokenPayload | null => {
+  try {
+    // JWT format: header.payload.signature
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      return null;
+    }
+    
+    // Decode the payload (middle part)
+    const payload = parts[1];
+    // Replace URL-safe characters and add padding if needed
+    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const paddedBase64 = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
+    
+    // Decode from base64
+    const jsonPayload = atob(paddedBase64);
+    return JSON.parse(jsonPayload) as TokenPayload;
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return null;
+  }
 };
 
 // Create the intl middleware

@@ -227,7 +227,8 @@ export const getIdFromSlugUrl = (slug: string) => {
 export const htmlToTextForDescription = (html: string) => {
   return convert(html,{
     limits: {
-      maxInputLength: 140,
+      // Tăng limit để tránh cảnh báo, meta description nên <= 160 ký tự
+      maxInputLength: 200,
     }
   })
 }

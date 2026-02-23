@@ -1,7 +1,7 @@
 {
   "HomePage": {
-    "title": "Nhà Hàng Big Boy",
-    "description": "Chào mừng đến với Nhà Hàng Big Boy — thưởng thức thực đơn phong phú với những món ăn ngon. Đặt món trực tuyến, quét QR tại bàn hoặc ghé thăm chúng tôi.",
+    "title": "Minu Kitchen",
+    "description": "Chào mừng đến với Minu Kitchen — thưởng thức thực đơn phong phú với những món ăn ngon. Đặt món trực tuyến, quét QR tại bàn hoặc ghé thăm chúng tôi.",
     "slogan": "Vị ngon, trọn khoảnh khắc",
     "h2": "Hành trình ẩm thực độc đáo",
     "subtitle": "Vị ngon, trọn khoảnh khắc",
@@ -35,7 +35,7 @@
     "orders": "Order",
     "login": "Đăng nhập",
     "manage": "Quản lý",
-    "logout": "Log Out",
+    "logout": "Đăng xuất",
     "logoutSuccess": "Đăng xuất thành công",
     "logoutConfirmTitle": "Bạn có muốn đăng xuất không?",
     "logoutConfirmDesc": "Việc đăng xuất có thể làm mất đi hoá đơn của bạn",
@@ -216,7 +216,6 @@
     "columnHandler": "Người xử lý",
     "columnUpdated": "Tạo/Cập nhật",
     "deletedGuest": "Đã bị xóa",
-    "fieldQuantity": "Số lượng",
     "actions": "Actions",
     "edit": "Sửa",
     "newOrderDesc": "Khách hàng {name} tại bàn {tableNumber} vừa gọi {count} đơn",
@@ -340,7 +339,7 @@
   },
   "TermsPage": {
     "title": "Điều Khoản Dịch Vụ",
-    "description": "Vui lòng đọc kỹ các điều khoản dịch vụ của Nhà Hàng Big Boy trước khi sử dụng.",
+    "description": "Vui lòng đọc kỹ các điều khoản dịch vụ của Minu Kitchen trước khi sử dụng.",
     "lastUpdated": "Cập nhật lần cuối: 01/01/2025",
     "section1Title": "1. Chấp Nhận Điều Khoản",
     "section1Content": "Khi sử dụng dịch vụ của chúng tôi, bạn đồng ý tuân theo các điều khoản và điều kiện được nêu trong tài liệu này. Nếu bạn không đồng ý với bất kỳ phần nào, vui lòng ngừng sử dụng dịch vụ.",
@@ -355,9 +354,9 @@
   },
   "AboutPage": {
     "title": "Về Chúng Tôi",
-    "description": "Tìm hiểu về câu chuyện, sứ mệnh và giá trị của Nhà Hàng Big Boy.",
+    "description": "Tìm hiểu về câu chuyện, sứ mệnh và giá trị của Minu Kitchen.",
     "storyTitle": "Câu Chuyện Của Chúng Tôi",
-    "storyContent": "Nhà Hàng Big Boy được thành lập với niềm đam mê ẩm thực và mong muốn mang đến những trải nghiệm ăn uống tuyệt vời cho thực khách. Chúng tôi tự hào phục vụ những món ăn ngon với nguyên liệu tươi sạch, được chế biến bởi đội ngũ đầu bếp giàu kinh nghiệm.",
+    "storyContent": "Minu Kitchen được thành lập với niềm đam mê ẩm thực và mong muốn mang đến những trải nghiệm ăn uống tuyệt vời cho thực khách. Chúng tôi tự hào phục vụ những món ăn ngon với nguyên liệu tươi sạch, được chế biến bởi đội ngũ đầu bếp giàu kinh nghiệm.",
     "missionTitle": "Sứ Mệnh",
     "missionContent": "Sứ mệnh của chúng tôi là mang lại những bữa ăn ngon, không gian ấm cúng và dịch vụ chu đáo. Chúng tôi tin rằng mỗi bữa ăn là một kỷ niệm đáng nhớ, và chúng tôi nỗ lực hết mình để tạo ra điều đó.",
     "valuesTitle": "Giá Trị Cốt Lõi",
@@ -370,7 +369,7 @@
   },
   "PrivacyPage": {
     "title": "Chính Sách Bảo Mật",
-    "description": "Chính sách bảo mật của Nhà Hàng Big Boy mô tả cách chúng tôi thu thập, sử dụng và bảo vệ thông tin cá nhân của bạn.",
+    "description": "Chính sách bảo mật của Minu Kitchen mô tả cách chúng tôi thu thập, sử dụng và bảo vệ thông tin cá nhân của bạn.",
     "lastUpdated": "Cập nhật lần cuối: 01/01/2025",
     "section1Title": "1. Thông Tin Chúng Tôi Thu Thập",
     "section1Content": "Chúng tôi có thể thu thập thông tin bạn cung cấp trực tiếp, bao gồm tên, số bàn và thông tin đặt món. Chúng tôi cũng thu thập thông tin sử dụng dịch vụ để cải thiện trải nghiệm của bạn.",
@@ -385,10 +384,50 @@
     "section6Title": "6. Liên Hệ",
     "section6Content": "Nếu bạn có câu hỏi về chính sách bảo mật này, vui lòng liên hệ với chúng tôi qua email hoặc đến trực tiếp nhà hàng."
   },
+  "Dishes": {
+    "smashedAvocadoToast": {
+      "name": "Bánh Mì Bơ Nghiền",
+      "description": "Bánh mì sourdough nướng giòn phết bơ tươi nghiền mịn, phô mai feta béo ngậy, cà chua bi chín mọng và giấm balsamic thơm nồng. Dùng kèm chanh tươi và rau mầm."
+    },
+    "eggsBenedict": {
+      "name": "Trứng Benedict",
+      "description": "Hai quả trứng poached lòng đào trên bánh muffin nướng vàng, kết hợp thịt xông khói giòn rụm và sốt hollandaise béo mịn. Dùng kèm salad rocket tươi mát."
+    },
+    "bigBreakfastPlatter": {
+      "name": "Bữa Sáng Lớn Kiểu Úc",
+      "description": "Bữa sáng đầy đủ kiểu Úc với trứng gà ta, thịt xông khói giòn tan, xúc xích heo thơm lừng, cà chua nướng, nấm xào bơ tỏi, khoai tây hash brown và bánh mì sourdough nướng."
+    },
+    "acaiBreakfastBowl": {
+      "name": "Bát Acai Dinh Dưỡng",
+      "description": "Quả acai giàu chất chống oxy hóa xay nhuyễn, phủ lớp granola giòn tan, chuối tươi, dâu tây ngọt, dừa sợi và hạt chia giàu omega-3. Thêm mật ong tự nhiên."
+    },
+    "buttermilkPancakes": {
+      "name": "Bánh Pancake Kem Chua",
+      "description": "Ba chiếc bánh pancake xốp mịn làm từ kem chua, ăn kèm si rô maple Canada, các loại berries tươi theo mùa, kem mascarpone béo ngậy và đường bột rắc lên trên."
+    }
+  },
   "Footer": {
     "terms": "Điều khoản dịch vụ",
     "privacy": "Chính sách bảo mật",
     "about": "Về chúng tôi",
-    "rights": "© {year} Nhà Hàng Big Boy. Bảo lưu mọi quyền."
+    "rights": "© {year} Minu Kitchen. Bảo lưu mọi quyền."
+  },
+  "NotFound": {
+    "title": "Không tìm thấy trang",
+    "description": "Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.",
+    "backHome": "Về trang chủ",
+    "viewMenu": "Xem thực đơn",
+    "popularPages": "Trang phổ biến:",
+    "home": "Trang chủ",
+    "about": "Về chúng tôi",
+    "terms": "Điều khoản",
+    "privacy": "Bảo mật"
+  },
+  "Error": {
+    "title": "Oops! Đã xảy ra lỗi",
+    "description": "Một lỗi không mong muốn đã xảy ra. Vui lòng thử lại hoặc quay về trang chủ.",
+    "tryAgain": "Thử lại",
+    "backHome": "Về trang chủ",
+    "persistentError": "Nếu vấn đề vẫn tiếp diễn, vui lòng liên hệ hỗ trợ."
   }
 }

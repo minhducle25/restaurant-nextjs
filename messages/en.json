@@ -1,7 +1,7 @@
 {
   "HomePage": {
-    "title": "Big Boy Restaurant",
-    "description": "Welcome to Big Boy Restaurant — enjoy a diverse menu of delicious dishes. Order online, scan QR at your table, or visit us in person.",
+    "title": "Minu Kitchen",
+    "description": "Welcome to Minu Kitchen — enjoy a diverse menu of delicious dishes. Order online, scan QR at your table, or visit us in person.",
     "slogan": "Delicious food, unforgettable experience",
     "h2": "A culinary journey like no other",
     "subtitle": "Every bite tells a story",
@@ -216,7 +216,6 @@
     "columnHandler": "Handler",
     "columnUpdated": "Created/Updated",
     "deletedGuest": "Deleted",
-    "fieldQuantity": "Quantity",
     "actions": "Actions",
     "edit": "Edit",
     "newOrderDesc": "Guest {name} at table {tableNumber} just ordered {count} items",
@@ -340,7 +339,7 @@
   },
   "TermsPage": {
     "title": "Terms of Service",
-    "description": "Please read the Big Boy Restaurant terms of service carefully before using our services.",
+    "description": "Please read the Minu Kitchen terms of service carefully before using our services.",
     "lastUpdated": "Last updated: January 1, 2025",
     "section1Title": "1. Acceptance of Terms",
     "section1Content": "By using our services, you agree to be bound by the terms and conditions set forth in this document. If you do not agree with any part of these terms, please stop using the service.",
@@ -355,9 +354,9 @@
   },
   "AboutPage": {
     "title": "About Us",
-    "description": "Learn about the story, mission, and values of Big Boy Restaurant.",
+    "description": "Learn about the story, mission, and values of Minu Kitchen.",
     "storyTitle": "Our Story",
-    "storyContent": "Big Boy Restaurant was founded with a passion for food and a desire to provide wonderful dining experiences for our guests. We take pride in serving delicious dishes made from fresh and clean ingredients, prepared by our experienced team of chefs.",
+    "storyContent": "Minu Kitchen was founded with a passion for food and a desire to provide wonderful dining experiences for our guests. We take pride in serving delicious dishes made from fresh and clean ingredients, prepared by our experienced team of chefs.",
     "missionTitle": "Our Mission",
     "missionContent": "Our mission is to deliver great food, a warm atmosphere, and attentive service. We believe every meal is a memorable moment, and we strive with everything we have to create that for you.",
     "valuesTitle": "Core Values",
@@ -370,7 +369,7 @@
   },
   "PrivacyPage": {
     "title": "Privacy Policy",
-    "description": "Big Boy Restaurant's privacy policy describes how we collect, use, and protect your personal information.",
+    "description": "Minu Kitchen's privacy policy describes how we collect, use, and protect your personal information.",
     "lastUpdated": "Last updated: January 1, 2025",
     "section1Title": "1. Information We Collect",
     "section1Content": "We may collect information you directly provide, including your name, table number, and order details. We also collect service usage information to improve your experience.",
@@ -389,6 +388,46 @@
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
     "about": "About Us",
-    "rights": "© {year} Big Boy Restaurant. All rights reserved."
+    "rights": "© {year} Minu Kitchen. All rights reserved."
+  },
+  "Dishes": {
+    "smashedAvocadoToast": {
+      "name": "Smashed Avocado Toast",
+      "description": "Fresh avocado smashed on sourdough toast with feta cheese, cherry tomatoes, and a drizzle of balsamic glaze. Served with lemon wedge and microgreens."
+    },
+    "eggsBenedict": {
+      "name": "Eggs Benedict",
+      "description": "Two poached eggs on toasted English muffins with crispy bacon, topped with creamy hollandaise sauce. Served with fresh rocket salad."
+    },
+    "bigBreakfastPlatter": {
+      "name": "Big Breakfast Platter",
+      "description": "The classic Aussie big breakfast with free-range eggs, crispy bacon, pork sausage, grilled tomato, sautéed mushrooms, hash brown, and toasted sourdough."
+    },
+    "acaiBreakfastBowl": {
+      "name": "Acai Breakfast Bowl",
+      "description": "Nutrient-packed acai blend topped with granola, fresh banana, strawberries, coconut flakes, chia seeds, and a drizzle of honey."
+    },
+    "buttermilkPancakes": {
+      "name": "Buttermilk Pancakes",
+      "description": "Fluffy stack of three buttermilk pancakes served with maple syrup, fresh berries, whipped mascarpone, and a sprinkle of powdered sugar."
+    }
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "backHome": "Back to Home",
+    "viewMenu": "View Menu",
+    "popularPages": "Popular Pages:",
+    "home": "Home",
+    "about": "About",
+    "terms": "Terms",
+    "privacy": "Privacy"
+  },
+  "Error": {
+    "title": "Oops! Something went wrong",
+    "description": "An unexpected error occurred. Please try again or return to the home page.",
+    "tryAgain": "Try Again",
+    "backHome": "Back to Home",
+    "persistentError": "If the problem persists, please contact support."
   }
 }

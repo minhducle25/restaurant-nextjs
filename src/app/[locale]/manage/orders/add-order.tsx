@@ -33,9 +33,11 @@ import { useCreateOrdersMutation } from "@/queries/useOrder";
 import { useCreateGuestMutation } from "@/queries/useAccount";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { getDishKey, hasDishTranslation } from "@/lib/dish-i18n";
 
 export default function AddOrder() {
   const t = useTranslations("ManageOrders");
+  const tDishes = useTranslations("Dishes");
   const [open, setOpen] = useState(false);
   const [selectedGuest, setSelectedGuest] = useState<
     GetListGuestsResType["data"][0] | null
@@ -220,7 +222,7 @@ export default function AddOrder() {
                 )}
                 <Image
                   src={dish.image}
-                  alt={dish.name}
+                  alt={hasDishTranslation(dish.name) ? tDishes(`${getDishKey(dish.name)}.name`) : dish.name}
                   height={100}
                   width={100}
                   quality={100}
@@ -228,8 +230,8 @@ export default function AddOrder() {
                 />
               </div>
               <div className="space-y-1">
-                <h3 className="text-sm">{dish.name}</h3>
-                <p className="text-xs">{dish.description}</p>
+                <h3 className="text-sm">{hasDishTranslation(dish.name) ? tDishes(`${getDishKey(dish.name)}.name`) : dish.name}</h3>
+                <p className="text-xs">{hasDishTranslation(dish.name) ? tDishes(`${getDishKey(dish.name)}.description`) : dish.description}</p>
                 <p className="text-xs font-semibold">
                   {formatCurrency(dish.price)}
                 </p>
