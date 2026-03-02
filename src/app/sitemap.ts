@@ -25,9 +25,14 @@ const staticRoutes: MetadataRoute.Sitemap = [{
     priority: 0.4
 }]
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    let dishList: any[] = [];
+    
+    try {
         const result = await dishApiRequest.list();
-
-    const dishList = result.payload.data;
+        dishList = result.payload.data;
+    } catch (error) {
+        console.warn('Failed to fetch dishes for sitemap:', error);
+    }
 
   const localizeStaticSiteMap = locales.reduce((acc, locale) => {
     return [
